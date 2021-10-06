@@ -1,0 +1,89 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+
+  .App-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
+    background-color: $deeper-blue;
+    border-bottom: solid 1px grey;
+    border-top: solid 1px grey;
+    padding: 10px;
+    margin-bottom: 50px;
+
+    h1 {
+      font-size: $large-text;
+    }
+  }
+
+  .experience-container {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 50px;
+
+    .experience-box {
+      padding: 20px 0;
+      width: 80%;
+      max-width: 800px;
+
+      &:hover{
+        .experience-box-inner {
+          $scale-factor: 1.05;
+          transform: scale($scale-factor);
+          background-color: $grey-hover;
+          transition: all 0.1s;
+        }
+      }
+
+      .experience-box-inner {
+        background-color: $grey;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 50px;
+        border-radius: 10px;
+        cursor: pointer;
+
+        .description-text {
+          display: none;
+        }
+
+        &.active {
+          background-color: $grey-hover;
+
+          .description-text {
+            display: block;
+          }
+        }
+
+        h2 {
+          font-size: $large-text;
+        }
+
+        .logo-container {
+          width: 80px;
+          height: 80px;
+          background-color: white;
+          border-radius: 10px;
+          overflow: hidden;
+          margin: 0 auto;
+          padding: 10px;
+
+          img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+
+          }
+        }
+      }
+    }
+  }
+}
