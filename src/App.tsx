@@ -6,7 +6,7 @@ import { experience } from './data/experience';
 type experienceData = {
   title: string,
   subtitle: string,
-  description: string,
+  description: Array<string>,
   type: string,
   logoPath: string,
 }
@@ -37,7 +37,12 @@ const ExperienceBox = ({data, fullScreen, setFullScreenIndex, idx}: ExperienceBo
         </div>
         <h2>{data.title}</h2>
         <h3>{data.subtitle}</h3>
-        <p className="description-text">{data.description}</p>
+        <div className="description-text">
+          <p>{data.description[0]}</p>
+          <ul>
+            {data.description.slice(1).map((line, idx) => <li key={idx}>{line}</li>)}
+          </ul>
+        </div>
       </div>
     </div>
   )
@@ -51,11 +56,14 @@ const App = () => {
     <div className="App">
       <header className="App-header">
         <h1>
-          Experience
+          About me
         </h1>
       </header>
 
       <div className="experience-container">
+        <h2>
+          Experience
+        </h2>
         {experience.map((data: experienceData, idx: number) => (
           <ExperienceBox
             data={data}

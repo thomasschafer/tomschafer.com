@@ -1,17 +1,38 @@
+@mixin max-width-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 20px;
+}
+
+@mixin centre-column-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  font-size: $extra-large-text;
+}
+
+h2 {
+  font-size: $large-text;
+}
+
+h3 {
+  font-size: $medium-text;
+}
+
 .App {
-  text-align: center;
+  @include centre-column-flex;
   min-height: 100vh;
 
   .App-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    @include max-width-container;
+    @include centre-column-flex;
     font-size: 22px;
     color: white;
-    background-color: $deeper-blue;
-    border-bottom: solid 1px grey;
-    border-top: solid 1px grey;
+    background-color: $background-color;
     padding: 10px;
     margin-bottom: 50px;
 
@@ -21,50 +42,48 @@
   }
 
   .experience-container {
+    @include max-width-container;
+    @include centre-column-flex;
     color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding-bottom: 50px;
 
     .experience-box {
       padding: 20px 0;
-      width: 80%;
-      max-width: 800px;
+      width: 100%;
+      text-align: center;
 
-      &:hover{
+      &:hover {
         .experience-box-inner {
           $scale-factor: 1.05;
           transform: scale($scale-factor);
-          background-color: $grey-hover;
+          background-color: $card-color-hover !important;
           transition: all 0.1s;
         }
       }
 
       .experience-box-inner {
-        background-color: $grey;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        @include centre-column-flex;
+        background-color: $card-color;
         padding: 20px 50px;
         border-radius: 10px;
         cursor: pointer;
+
+        h1, h2, h3 {
+          margin: 10px;
+        }
 
         .description-text {
           display: none;
         }
 
         &.active {
-          background-color: $grey-hover;
+          background-color: $card-color-selected;
 
           .description-text {
             display: block;
+            text-align: left;
+            line-height: 170%;
           }
-        }
-
-        h2 {
-          font-size: $large-text;
         }
 
         .logo-container {
@@ -73,14 +92,13 @@
           background-color: white;
           border-radius: 10px;
           overflow: hidden;
-          margin: 0 auto;
+          margin: 15px auto;
           padding: 10px;
 
           img {
             height: 100%;
             width: 100%;
             object-fit: contain;
-
           }
         }
       }
