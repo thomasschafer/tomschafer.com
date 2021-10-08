@@ -1,5 +1,7 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 
+import './scss/index.scss';
 import { experience } from './data/experience';
 
 
@@ -15,7 +17,7 @@ type experienceData = {
 type ExperienceBoxProps = {
   data: experienceData,
   fullScreen: boolean,
-  setFullScreenIndex: Dispatch<SetStateAction<number>>,
+  setFullScreenIndex: React.Dispatch<React.SetStateAction<number>>,
   idx: number,
 }
 
@@ -48,34 +50,103 @@ const ExperienceBox = ({data, fullScreen, setFullScreenIndex, idx}: ExperienceBo
   )
 }
 
+type section = {
+  title: string,
+  component: React.ReactElement,
+  ref: any, //TODO: FIX
+}
 
-const App = () => {
+type HeaderSectionProps = {
+  sections: Array<section>,
+  executeScroll: (ref: any) => () => void, //TODO FIX
+}
+
+const HeaderSection = ({ sections, executeScroll }: HeaderSectionProps) => (
+  <header>
+    <div id="navbar-padding" />
+    <div id="navbar" className="App-header">
+      <ul className="max-width-container">
+        {sections.map(section => (
+          <li key={section.title} onClick={executeScroll(section.ref)}>{section.title}</li>
+        ))}
+      </ul>
+    </div>
+  </header>
+)
+
+
+const ExperienceSection = () => {
   const [fullScreenIndex, setFullScreenIndex] = useState(-1);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>
-          About me
-        </h1>
-      </header>
-
-      <div className="experience-container">
-        <h2>
-          Experience
-        </h2>
-        {experience.map((data: experienceData, idx: number) => (
-          <ExperienceBox
-            data={data}
-            fullScreen={fullScreenIndex==idx}
-            setFullScreenIndex={setFullScreenIndex}
-            idx={idx}
-            key={idx}
-          />
-        ))}
-      </div>
-    </div>
-  );
+    <React.Fragment>
+      {experience.map((data: experienceData, idx: number) => (
+        <ExperienceBox
+          data={data}
+          fullScreen={fullScreenIndex==idx}
+          setFullScreenIndex={setFullScreenIndex}
+          idx={idx}
+          key={idx}
+        />
+      ))}
+    </React.Fragment>
+  )
 }
 
-export default App;
+
+const App = () => {
+  const executeScroll = (ref: any) => () => { // TODO: FIX ANY
+    if (ref.current) {
+      ref.current.scrollIntoView();
+      const navBar = document.getElementById("navbar");
+      console.log(navBar);
+      if (navBar) {
+        setTimeout(() => {navBar.classList.add('navbar-hide');}, 0);
+      }
+    }
+  }
+
+  const sections: Array<section> = [
+    {title: 'Experience', component: <ExperienceSection/>, ref: useRef<HTMLDivElement | null>(null)},
+    {title: 'Technologies', component: <div></div>, ref: useRef<HTMLDivElement | null>(null)}
+  ]
+
+  let prevScrollpos = window.pageYOffset;
+
+  window.onscroll = () => {
+    const currentScrollPos = window.pageYOffset;
+    const navBar = document.getElementById("navbar");
+    if (navBar) {
+      if (prevScrollpos > currentScrollPos) {
+        navBar.classList.remove('navbar-hide');
+      } else {
+        navBar.classList.add('navbar-hide');
+      }
+      prevScrollpos = currentScrollPos;
+    }
+  }
+
+  return (
+    <div className="App">
+      <HeaderSection executeScroll={executeScroll} sections={sections}/>
+      {sections.map(obj => ( // TODO: FIX OBJ NAME
+        <div ref={obj.ref} className="experience-container" key={obj.title}>
+          <h2>
+            {obj.title}
+          </h2>
+          {obj.component}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+
+export const runApp = () => {
+  ReactDOM.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+}

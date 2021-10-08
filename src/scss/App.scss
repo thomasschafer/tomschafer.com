@@ -23,33 +23,85 @@ h3 {
   font-size: $medium-text;
 }
 
+.max-width-container {
+  @include max-width-container;
+}
+
+#navbar {
+  position: fixed;
+  top: 0;
+  transition: top 0.3s;
+  z-index: 2;
+  height: $navbar-height;
+  width: 100%;
+  background-color: $menu-bar-color;
+
+  &.navbar-hide {
+    top: calc(0px - $navbar-height);
+  }
+}
+
+#navbar-padding {
+  height: $navbar-height;
+  margin-bottom: 10px;
+}
+
+header {
+  width: 100%;
+}
+
 .App {
   @include centre-column-flex;
   min-height: 100vh;
 
   .App-header {
-    @include max-width-container;
     @include centre-column-flex;
+    width: 100%;
     font-size: 22px;
     color: white;
-    background-color: $background-color;
-    padding: 10px;
-    margin-bottom: 50px;
+    text-align: center;
 
     h1 {
       font-size: $large-text;
     }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        font-weight: bold;
+        cursor: pointer;
+        display: inline;
+        margin: 20px;
+      }
+    }
+
+    svg {
+      height: 50px;
+
+      .code-icon {
+        text-indent: 0;
+        text-transform: none;
+        direction: ltr;
+        color: white;
+        fill: white;
+        enable-background: accumulate;
+      }
+    }
+
   }
 
   .experience-container {
     @include max-width-container;
     @include centre-column-flex;
+
     color: white;
     padding-bottom: 50px;
 
     .experience-box {
       padding: 20px 0;
-      width: 100%;
+      width: 90%;
       text-align: center;
 
       &:hover {
@@ -65,7 +117,7 @@ h3 {
         @include centre-column-flex;
         background-color: $card-color;
         padding: 20px 50px;
-        border-radius: 10px;
+        border-radius: 5px;
         cursor: pointer;
 
         h1, h2, h3 {
@@ -90,7 +142,7 @@ h3 {
           width: 80px;
           height: 80px;
           background-color: white;
-          border-radius: 10px;
+          border-radius: 5px;
           overflow: hidden;
           margin: 15px auto;
           padding: 10px;
