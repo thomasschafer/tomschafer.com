@@ -43,7 +43,7 @@ export const TechnologiesSection = () => {
       {technologies.map((technology, idx) => (
         <TechnologyBox
           technology={technology}
-          isExpanded={expandedBoxIndex == idx}
+          isExpanded={expandedBoxIndex === idx}
           setExpandedBoxIndex={setExpandedBoxIndex}
           idx={idx}
           key={idx}

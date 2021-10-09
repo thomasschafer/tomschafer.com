@@ -46,7 +46,7 @@ export const ExperienceSection = () => {
       {experience.map((data: experienceType, idx: number) => (
         <ExperienceBox
           data={data}
-          isExpanded={expandedBoxIndex == idx}
+          isExpanded={expandedBoxIndex === idx}
           setExpandedBoxIndex={setExpandedBoxIndex}
           idx={idx}
           key={idx}
