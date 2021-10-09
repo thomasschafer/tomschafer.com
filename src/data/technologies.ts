@@ -13,5 +13,5 @@ export const technologies: Array<technologyType> = [
     description: "Experience: 1 year",
     logoPath: "images/js_ts_logo.jpeg",
   },
-  { name: "React", description: "Experience: 1 year", logoPath: "images/react_logo.png" },
+  { name: "React", description: "Experience: 1 year", logoPath: "images/react_logo.svg" },
 ];

@@ -34,7 +34,9 @@ export const experience: Array<experienceType> = [
   {
     title: "University of Bristol",
     subtitle: "BSc Mathematics",
-    description: ["1st"],
+    description: [
+      "First class honours (final grade 76%), including 89% in final year project on p-adic numbers.",
+    ],
     type: "education",
     logoPath: "images/university_of_bristol_logo.jpeg",
   },

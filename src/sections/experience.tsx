@@ -18,23 +18,34 @@ const ExperienceBox = ({ data, isExpanded, setExpandedBoxIndex, idx }: Experienc
   };
 
   return (
-    <div className="info-box">
-      <div className={`info-box-inner pointer ${isExpanded && " active"}`} onClick={toggleExpanded}>
-        <div className="logo-container">
-          <img alt={data.title + " Logo"} src={data.logoPath} />
+    <React.Fragment>
+      {data.type == "education" && (
+        <div className="education-subtitle">
+          <h3 className="margin-top-10 margin-bottom-10">Education</h3>
         </div>
-        <h2>{data.title}</h2>
-        <h3>{data.subtitle}</h3>
-        <div className="description-text">
-          <p>{data.description[0]}</p>
-          <ul>
-            {data.description.slice(1).map((line, idx) => (
-              <li key={idx}>{line}</li>
-            ))}
-          </ul>
+      )}
+      <div className={`info-box ${data.type == "education" ? "education" : ""}`}>
+        <div
+          className={`info-box-inner pointer ${isExpanded && " active"}`}
+          onClick={toggleExpanded}
+        >
+          <div className="logo-container">
+            <img alt={data.title + " Logo"} src={data.logoPath} />
+          </div>
+          <h2>{data.title}</h2>
+          <h3>{data.subtitle}</h3>
+          <p className="read-more-text">Read more</p>
+          <div className="description-text">
+            <p>{data.description[0]}</p>
+            <ul>
+              {data.description.slice(1).map((line, idx) => (
+                <li key={idx}>{line}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 
