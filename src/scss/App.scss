@@ -52,13 +52,13 @@ header {
 
 .App {
   @include centre-column-flex;
+  color: $text-color;
   min-height: 100vh;
 
   .App-header {
     @include centre-column-flex;
     width: 100%;
     font-size: 22px;
-    color: white;
     text-align: center;
 
     h1 {
@@ -73,54 +73,59 @@ header {
         font-weight: bold;
         cursor: pointer;
         display: inline;
-        margin: 20px;
+        margin: 10px;
+        padding: 10px;
+        position: relative;
+        top: 0;
+        transition: top ease 0.1s;
+
+        &:hover {
+          color: white;
+          top: -2px;
+        }
       }
     }
-
-    svg {
-      height: 50px;
-
-      .code-icon {
-        text-indent: 0;
-        text-transform: none;
-        direction: ltr;
-        color: white;
-        fill: white;
-        enable-background: accumulate;
-      }
-    }
-
   }
 
   .experience-container {
     @include max-width-container;
     @include centre-column-flex;
-
-    color: white;
     padding-bottom: 50px;
 
-    .experience-box {
+    .info-box {
       padding: 20px 0;
       width: 90%;
       text-align: center;
 
+      &--small {
+        @extend .info-box;
+        padding: 7px 0;
+      }
+
       &:hover {
-        .experience-box-inner {
+        .info-box-inner {
           $scale-factor: 1.05;
           transform: scale($scale-factor);
           background-color: $card-color-hover !important;
           transition: all 0.1s;
+          color: white;
         }
       }
 
-      .experience-box-inner {
+      .info-box-inner {
         @include centre-column-flex;
         background-color: $card-color;
         padding: 20px 50px;
         border-radius: 5px;
-        cursor: pointer;
 
-        h1, h2, h3 {
+        &.pointer {
+          cursor: pointer;
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
           margin: 10px;
         }
 
@@ -141,16 +146,44 @@ header {
         .logo-container {
           width: 80px;
           height: 80px;
+          min-width: 80px;
+          min-height: 80px;
           background-color: white;
           border-radius: 5px;
           overflow: hidden;
-          margin: 15px auto;
+          margin: 15px 0;
           padding: 10px;
 
           img {
             height: 100%;
             width: 100%;
             object-fit: contain;
+          }
+
+          &--small {
+            @extend .logo-container;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+          }
+        }
+
+        &--left {
+          @extend .info-box-inner;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          text-align: left;
+          padding: 10px 30px;
+
+          @media screen and (max-width: 400px) {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .logo-container {
+            margin-right: 20px;
           }
         }
       }
