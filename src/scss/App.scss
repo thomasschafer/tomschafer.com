@@ -50,6 +50,12 @@ header {
         top: 0;
         transition: top ease 0.1s;
 
+        @media screen and (max-width: 500px) {
+          padding: 8px;
+          margin: 0px;
+          font-size: $small-text;
+        }
+
         &:hover {
           color: white;
           top: -2px;
