@@ -11,6 +11,17 @@
   justify-content: center;
 }
 
+@mixin centre-row-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.centre-row-flex {
+  @include centre-row-flex;
+}
+
 h1 {
   font-size: $extra-large-text;
 }
@@ -21,6 +32,10 @@ h2 {
 
 h3 {
   font-size: $medium-text;
+}
+
+header {
+  width: 100%;
 }
 
 .max-width-container {
@@ -45,4 +60,29 @@ h3 {
 
 .margin-bottom-10 {
   margin-bottom: 10px;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.margin-lr-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.desktop-only {
+  visibility: visible;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    visibility: hidden;
+  }
+}
+
+.mobile-only {
+  visibility: hidden;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    visibility: visible;
+  }
 }

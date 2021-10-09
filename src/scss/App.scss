@@ -1,68 +1,7 @@
-#navbar {
-  position: fixed;
-  top: 0;
-  transition: top 0.3s;
-  z-index: 2;
-  height: $navbar-height;
-  width: 100%;
-  background-color: $menu-bar-color;
-
-  &.navbar-hide {
-    top: calc(0px - $navbar-height);
-  }
-}
-
-#navbar-padding {
-  height: $navbar-height;
-  margin-bottom: 10px;
-}
-
-header {
-  width: 100%;
-}
-
 .App {
   @include centre-column-flex;
   color: $text-color;
   min-height: 100vh;
-
-  .App-header {
-    @include centre-column-flex;
-    width: 100%;
-    font-size: 22px;
-    text-align: center;
-
-    h1 {
-      font-size: $large-text;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-
-      li {
-        font-weight: bold;
-        cursor: pointer;
-        display: inline;
-        margin: 10px;
-        padding: 10px;
-        position: relative;
-        top: 0;
-        transition: top ease 0.1s;
-
-        @media screen and (max-width: 500px) {
-          padding: 8px;
-          margin: 0px;
-          font-size: $small-text;
-        }
-
-        &:hover {
-          color: white;
-          top: -2px;
-        }
-      }
-    }
-  }
 
   .experience-container {
     @include max-width-container;

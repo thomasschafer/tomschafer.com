@@ -1,0 +1,29 @@
+#main-menu-modal {
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: $card-color;
+  color: $text-color;
+
+  .main-menu-modal-inner {
+    @include centre-column-flex;
+    height: 100%;
+    position: relative;
+
+    a {
+      padding: 10px;
+      margin: 10px;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+    }
+  }
+}
