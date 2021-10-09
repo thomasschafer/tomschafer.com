@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { technologies, technologyType } from "../data/technologies";
 
 type technologyBoxProps = {

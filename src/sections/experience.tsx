@@ -19,12 +19,12 @@ const ExperienceBox = ({ data, isExpanded, setExpandedBoxIndex, idx }: Experienc
 
   return (
     <React.Fragment>
-      {data.type == "education" && (
+      {data.type === "education" && (
         <div className="education-subtitle">
           <h3 className="margin-top-10 margin-bottom-10">Education</h3>
         </div>
       )}
-      <div className={`info-box ${data.type == "education" ? "education" : ""}`}>
+      <div className={`info-box ${data.type === "education" ? "education" : ""}`}>
         <div
           className={`info-box-inner pointer ${isExpanded && " active"}`}
           onClick={toggleExpanded}
