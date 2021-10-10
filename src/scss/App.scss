@@ -125,10 +125,16 @@
 
     .individual-link {
       @include centre-column-flex;
-      margin: 20px;
+      $individual-link-margin: 20px;
+      margin: $individual-link-margin;
       padding: 20px;
       text-decoration: none;
       color: white;
+
+      &:hover {
+        margin-top: calc($individual-link-margin - 5px);
+        transition: all 0.1s;
+      }
 
       .link-image {
         $link-image-size: 70px;

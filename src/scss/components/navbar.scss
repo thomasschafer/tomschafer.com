@@ -19,8 +19,46 @@
 
     .show-main-menu-link {
       position: absolute;
-      right: 20px;
-      top: 5px;
+      right: 15px;
+      top: 0;
+      padding: 5px;
+
+      #main-menu-icon {
+        height: 50px;
+        width: 50px;
+        cursor: pointer;
+
+        #top-line,
+        #middle-line,
+        #bottom-line,
+        #background-circle {
+          transition: all 0.3s;
+        }
+
+        &.close-menu {
+          #middle-line {
+            opacity: 0;
+          }
+
+          #top-line {
+            transform: rotate(45deg) translateX(30px) translateY(-45px);
+            stroke: white;
+          }
+
+          #bottom-line {
+            transform: rotate(-45deg) translateX(-75px) translateY(0px);
+            stroke: white;
+          }
+
+          #background-circle {
+            fill: black;
+          }
+        }
+
+        line {
+          stroke: black;
+        }
+      }
     }
   }
 }
