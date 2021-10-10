@@ -28,6 +28,7 @@ export const HeaderSection = ({
           className="show-main-menu-link mobile-only"
           onClick={() => toggleMainMenu(showMainMenu)}
         >
+          <div className="menu-text">Menu</div>
           <svg
             width="150"
             height="150"

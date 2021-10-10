@@ -22,6 +22,14 @@
       right: 15px;
       top: 0;
       padding: 5px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .menu-text {
+        padding-right: 10px;
+        font-size: $medium-text;
+      }
 
       #main-menu-icon {
         height: 50px;
