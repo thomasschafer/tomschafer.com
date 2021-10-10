@@ -6,7 +6,7 @@ export type experienceType = {
   logoPath: string;
 };
 
-export const experience: Array<experienceType> = [
+export const workData: Array<experienceType> = [
   {
     title: "Lambert Labs",
     subtitle: "Junior Python Developer",
@@ -31,6 +31,9 @@ export const experience: Array<experienceType> = [
     type: "job",
     logoPath: "images/play_sports_network_logo.png",
   },
+];
+
+export const educationData: Array<experienceType> = [
   {
     title: "University of Bristol",
     subtitle: "BSc Mathematics",

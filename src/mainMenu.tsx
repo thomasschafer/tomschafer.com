@@ -2,27 +2,28 @@ import { divRef, section } from "./types/types";
 
 type MainMenuProps = {
   sections: Array<section>;
-  closeMenu: () => void;
+  toggleMainMenu: (showMainMenu: boolean) => void;
   executeScroll: (ref: divRef) => () => void;
 };
 
-export const MainMenu = ({ sections, closeMenu, executeScroll }: MainMenuProps) => {
+export const MainMenu = ({ sections, toggleMainMenu, executeScroll }: MainMenuProps) => {
   const jumpToSection = (ref: divRef) => {
-    closeMenu();
-    setTimeout(() => executeScroll(ref), 0);
+    toggleMainMenu(true);
+    executeScroll(ref)();
   };
 
   return (
     <div id="main-menu-modal">
       <div className="main-menu-modal-inner">
         {sections.map((section) => (
-          <div key={section.title} onClick={() => jumpToSection(section.ref)}>
-            <h2>{section.title}</h2>
+          <div
+            className="navbar-link large-text"
+            key={section.title}
+            onClick={() => jumpToSection(section.ref)}
+          >
+            {section.title}
           </div>
         ))}
-        <div className="close-button" onClick={closeMenu}>
-          <h2>Close</h2>
-        </div>
       </div>
     </div>
   );

@@ -2,11 +2,17 @@ import { divRef, section } from "../types/types";
 
 type HeaderSectionProps = {
   sections: Array<section>;
+  toggleMainMenu: (showMainMenu: boolean) => void;
+  showMainMenu: boolean;
   executeScroll: (ref: divRef) => () => void;
-  openMenu: () => void;
 };
 
-export const HeaderSection = ({ sections, executeScroll, openMenu }: HeaderSectionProps) => (
+export const HeaderSection = ({
+  sections,
+  toggleMainMenu,
+  showMainMenu,
+  executeScroll,
+}: HeaderSectionProps) => (
   <header>
     <div id="navbar-padding" />
     <div id="navbar" className="App-header">
@@ -18,9 +24,12 @@ export const HeaderSection = ({ sections, executeScroll, openMenu }: HeaderSecti
             </div>
           ))}
         </div>
-        <a className="show-main-menu-link mobile-only" onClick={openMenu}>
-          SHOW MAIN MENU
-        </a>
+        <div
+          className="show-main-menu-link mobile-only"
+          onClick={() => toggleMainMenu(showMainMenu)}
+        >
+          <p>SHOW MAIN MENU</p>
+        </div>
       </div>
     </div>
   </header>

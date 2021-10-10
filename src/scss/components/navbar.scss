@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   transition: top 0.3s;
-  z-index: 2;
+  z-index: 4;
   height: $navbar-height;
   width: 100%;
   background-color: $menu-bar-color;
@@ -17,28 +17,28 @@
     width: 100%;
     position: relative;
 
-    .navbar-link {
-      font-weight: bold;
-      cursor: pointer;
-      display: inline;
-      margin: 10px;
-      padding: 10px;
-      position: relative;
-      top: 0;
-      font-size: $medium-text;
-      transition: top ease 0.1s;
-
-      &:hover {
-        color: white;
-        top: -2px;
-      }
-    }
-
     .show-main-menu-link {
       position: absolute;
-      right: 0;
-      top: 20px;
+      right: 20px;
+      top: 5px;
     }
+  }
+}
+
+.navbar-link {
+  font-weight: bold;
+  cursor: pointer;
+  display: inline;
+  margin: 10px;
+  padding: 10px;
+  position: relative;
+  top: 0;
+  font-size: $medium-text;
+  transition: top ease 0.1s;
+
+  &:hover {
+    color: white;
+    top: -2px;
   }
 }
 

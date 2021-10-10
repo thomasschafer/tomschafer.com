@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import "./scss/index.scss";
 import { MainMenu } from "./mainMenu";
-import { ExperienceSection } from "./sections/experience";
+import { EducationSection, WorkSection } from "./sections/experience";
 import { HeaderSection } from "./sections/header";
 import { LinksSection } from "./sections/links";
 import { TechnologiesSection } from "./sections/technologies";
@@ -12,22 +12,21 @@ import { divRef, divRefCurrent, section } from "./types/types";
 const App = () => {
   const [showMainMenu, setShowMainMenu] = useState(false);
 
-  const openMenu = () => {
-    setShowMainMenu(true);
-    document.body.classList.add("overflow-hidden");
-  };
-
-  const closeMenu = () => {
-    setShowMainMenu(false);
-    document.body.classList.remove("overflow-hidden");
+  const toggleMainMenu = (currentShowMainMenu: boolean) => {
+    setShowMainMenu(!currentShowMainMenu);
+    if (currentShowMainMenu) {
+      document.body.classList.remove("overflow-hidden");
+    } else {
+      document.body.classList.add("overflow-hidden");
+    }
   };
 
   const executeScroll = (ref: divRef) => () => {
-    console.log(ref);
+    console.log("ref", ref);
     if (ref.current) {
+      console.log("ref.current", ref.current);
       ref.current.scrollIntoView();
       const navBar = document.getElementById("navbar");
-      console.log(navBar);
       if (navBar) {
         setTimeout(() => {
           navBar.classList.add("navbar-hide");
@@ -37,7 +36,8 @@ const App = () => {
   };
 
   const sections: Array<section> = [
-    { title: "Experience", component: <ExperienceSection />, ref: useRef<divRefCurrent>(null) },
+    { title: "Experience", component: <WorkSection />, ref: useRef<divRefCurrent>(null) },
+    { title: "Education", component: <EducationSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Technologies", component: <TechnologiesSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Links", component: <LinksSection />, ref: useRef<divRefCurrent>(null) },
   ];
@@ -60,10 +60,19 @@ const App = () => {
   return (
     <React.Fragment>
       {showMainMenu && (
-        <MainMenu sections={sections} closeMenu={closeMenu} executeScroll={executeScroll} />
+        <MainMenu
+          sections={sections}
+          toggleMainMenu={toggleMainMenu}
+          executeScroll={executeScroll}
+        />
       )}
       <div className="App">
-        <HeaderSection executeScroll={executeScroll} sections={sections} openMenu={openMenu} />
+        <HeaderSection
+          executeScroll={executeScroll}
+          sections={sections}
+          showMainMenu={showMainMenu}
+          toggleMainMenu={toggleMainMenu}
+        />
         {sections.map((section) => (
           <div ref={section.ref} className="experience-container" key={section.title}>
             <h2 className="margin-bottom-10">{section.title}</h2>

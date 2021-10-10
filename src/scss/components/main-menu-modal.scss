@@ -6,7 +6,7 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: $card-color;
+  background-color: $menu-bar-color;
   color: $text-color;
 
   .main-menu-modal-inner {
@@ -17,13 +17,6 @@
     a {
       padding: 10px;
       margin: 10px;
-    }
-
-    .close-button {
-      position: absolute;
-      top: 0;
-      right: 0;
-      cursor: pointer;
     }
   }
 }
