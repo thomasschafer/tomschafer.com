@@ -4,7 +4,6 @@
   min-height: 100vh;
 
   .experience-container {
-    @include max-width-container;
     @include centre-column-flex;
     padding-bottom: 30px;
 
@@ -15,7 +14,7 @@
 
     .info-box {
       padding: 12px 0;
-      width: 90%;
+      width: 100%;
       text-align: center;
 
       &--small {

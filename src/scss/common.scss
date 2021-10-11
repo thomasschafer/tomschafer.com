@@ -1,21 +1,23 @@
 @mixin max-width-container {
-  width: 100%;
+  width: 92%;
   max-width: 800px;
   margin: 0 20px;
 }
 
-@mixin centre-column-flex {
+@mixin center-flex {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
+@mixin centre-column-flex {
+  @include center-flex;
+  flex-direction: column;
+}
+
 @mixin centre-row-flex {
-  display: flex;
+  @include center-flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
 }
 
 .centre-row-flex {

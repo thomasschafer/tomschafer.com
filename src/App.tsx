@@ -74,7 +74,11 @@ const App = () => {
           toggleMainMenu={toggleMainMenu}
         />
         {sections.map((section) => (
-          <div ref={section.ref} className="experience-container" key={section.title}>
+          <div
+            ref={section.ref}
+            className="experience-container max-width-container"
+            key={section.title}
+          >
             <h2 className="margin-bottom-10">{section.title}</h2>
             {section.component}
           </div>
