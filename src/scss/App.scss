@@ -131,7 +131,9 @@
       color: white;
 
       &:hover {
-        margin-top: calc($individual-link-margin - 5px);
+        margin-top: calc($individual-link-margin - 10px);
+        $scale-factor: 1.03;
+        transform: scale($scale-factor);
         transition: all 0.1s;
       }
 
@@ -150,5 +152,9 @@
         }
       }
     }
+  }
+
+  .about-me-text {
+    font-size: $small-text;
   }
 }

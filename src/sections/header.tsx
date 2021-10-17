@@ -6,7 +6,7 @@ type MenuIconProps = {
 };
 
 const MenuIcon = ({ toggleMainMenu, showMainMenu }: MenuIconProps) => (
-  <div className="show-main-menu-link mobile-only" onClick={() => toggleMainMenu(showMainMenu)}>
+  <div className="show-main-menu-link" onClick={() => toggleMainMenu(showMainMenu)}>
     <div className="menu-text">Menu</div>
     <svg
       width="150"
@@ -50,13 +50,6 @@ export const HeaderSection = ({
           <a href="/">
             <img src="tomschafer_logo_192.png" alt="Site logo" />
           </a>
-        </div>
-        <div className="desktop-only centre-row-flex">
-          {sections.map((section) => (
-            <div className="navbar-link" key={section.title} onClick={executeScroll(section.ref)}>
-              {section.title}
-            </div>
-          ))}
         </div>
         <MenuIcon toggleMainMenu={toggleMainMenu} showMainMenu={showMainMenu} />
       </div>

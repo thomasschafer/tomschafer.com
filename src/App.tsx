@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 import "./scss/index.scss";
 import { MainMenu } from "./mainMenu";
+import { AboutMe } from "./sections/aboutMe";
 import { EducationSection, WorkSection } from "./sections/experience";
 import { HeaderSection } from "./sections/header";
 import { LinksSection } from "./sections/links";
@@ -36,6 +37,7 @@ const App = () => {
   };
 
   const sections: Array<section> = [
+    { title: "About Me", component: <AboutMe />, ref: useRef<divRefCurrent>(null) },
     { title: "Experience", component: <WorkSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Education", component: <EducationSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Technologies", component: <TechnologiesSection />, ref: useRef<divRefCurrent>(null) },
