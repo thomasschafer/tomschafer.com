@@ -10,19 +10,6 @@ import { LinksSection } from "./sections/links";
 import { TechnologiesSection } from "./sections/technologies";
 import { divRef, divRefCurrent, section } from "./types/types";
 
-const showHideNavBarOnScroll = (prevScrollpos: number) => {
-  const currentScrollPos = window.pageYOffset;
-  const navBar = document.getElementById("navbar");
-  if (navBar) {
-    if (prevScrollpos > currentScrollPos) {
-      navBar.classList.remove("navbar-hide");
-    } else {
-      navBar.classList.add("navbar-hide");
-    }
-    prevScrollpos = currentScrollPos;
-  }
-};
-
 export const ExpandedBoxContext = React.createContext({
   expandedBoxIndex: -1,
   setExpandedBoxIndex: (newIndex: number) => {},
@@ -33,7 +20,19 @@ const App = () => {
   const [expandedBoxIndex, setExpandedBoxIndex] = useState(-1);
 
   let prevScrollpos = window.pageYOffset;
-  window.onscroll = () => showHideNavBarOnScroll(prevScrollpos);
+
+  window.onscroll = () => {
+    const currentScrollPos = window.pageYOffset;
+    const navBar = document.getElementById("navbar");
+    if (navBar) {
+      if (prevScrollpos > currentScrollPos) {
+        navBar.classList.remove("navbar-hide");
+      } else {
+        navBar.classList.add("navbar-hide");
+      }
+      prevScrollpos = currentScrollPos;
+    }
+  };
 
   const toggleMainMenu = (currentShowMainMenu: boolean) => {
     setShowMainMenu(!currentShowMainMenu);
