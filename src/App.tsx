@@ -10,8 +10,30 @@ import { LinksSection } from "./sections/links";
 import { TechnologiesSection } from "./sections/technologies";
 import { divRef, divRefCurrent, section } from "./types/types";
 
+const showHideNavBarOnScroll = (prevScrollpos: number) => {
+  const currentScrollPos = window.pageYOffset;
+  const navBar = document.getElementById("navbar");
+  if (navBar) {
+    if (prevScrollpos > currentScrollPos) {
+      navBar.classList.remove("navbar-hide");
+    } else {
+      navBar.classList.add("navbar-hide");
+    }
+    prevScrollpos = currentScrollPos;
+  }
+};
+
+export const ExpandedBoxContext = React.createContext({
+  expandedBoxIndex: -1,
+  setExpandedBoxIndex: (newIndex: number) => {},
+});
+
 const App = () => {
   const [showMainMenu, setShowMainMenu] = useState(false);
+  const [expandedBoxIndex, setExpandedBoxIndex] = useState(-1);
+
+  let prevScrollpos = window.pageYOffset;
+  window.onscroll = () => showHideNavBarOnScroll(prevScrollpos);
 
   const toggleMainMenu = (currentShowMainMenu: boolean) => {
     setShowMainMenu(!currentShowMainMenu);
@@ -44,23 +66,15 @@ const App = () => {
     { title: "Links", component: <LinksSection />, ref: useRef<divRefCurrent>(null) },
   ];
 
-  let prevScrollpos = window.pageYOffset;
-
-  window.onscroll = () => {
-    const currentScrollPos = window.pageYOffset;
-    const navBar = document.getElementById("navbar");
-    if (navBar) {
-      if (prevScrollpos > currentScrollPos) {
-        navBar.classList.remove("navbar-hide");
-      } else {
-        navBar.classList.add("navbar-hide");
-      }
-      prevScrollpos = currentScrollPos;
-    }
-  };
-
   return (
-    <React.Fragment>
+    <ExpandedBoxContext.Provider
+      value={{
+        expandedBoxIndex: expandedBoxIndex,
+        setExpandedBoxIndex: (newIndex: number) => {
+          setExpandedBoxIndex(newIndex);
+        },
+      }}
+    >
       {showMainMenu && (
         <MainMenu
           sections={sections}
@@ -86,7 +100,7 @@ const App = () => {
           </div>
         ))}
       </div>
-    </React.Fragment>
+    </ExpandedBoxContext.Provider>
   );
 };
 

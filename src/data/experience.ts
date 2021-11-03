@@ -9,12 +9,12 @@ export type experienceType = {
 export const workData: Array<experienceType> = [
   {
     title: "Lambert Labs",
-    subtitle: "Junior Python Developer",
+    subtitle: "Software Engineer",
     description: [
-      "Web development for a variety of clients with varied technology stacks, mainly using Python and JavaScript/TypeScript. Highlights:",
-      "Integrated React with an existing Django site for an education client to build dynamic interfaces, building REST endpoints to communicate with the backend",
-      "Designed and rebuilt menu bar from scratch for legal client, updating from a hardcoded burger menu to a flat menu bar with dropdowns that can be customised in the Wagtail CMS",
-      "Worked with a design agency to implement their design update into a Django + React site",
+      "Development for a variety of clients with varied technology stacks, mainly using Python and JavaScript/TypeScript. Highlights:",
+      "Integrated React with an existing Django site for an education client to build dynamic messaging dashboard",
+      "Built REST endpoints in Django to communicate with React frontends",
+      "Rebuilt various parts a legal client's website, using a combination of Django templating, vanilla Javascript and React with Typescript",
       "Communicating with multiple stakeholders from across the client businesses to understand requirements, propose ideas and demonstrate solutions",
     ],
     type: "job",

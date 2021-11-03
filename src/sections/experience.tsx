@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
+
 import { educationData, workData, experienceType } from "../data/experience";
+import { ExpandedBoxContext } from "../App";
 
 type ExperienceBoxProps = {
   data: experienceType;
   isExpanded: boolean;
-  setExpandedBoxIndex: React.Dispatch<React.SetStateAction<number>>;
+  setExpandedBoxIndex: (newIndex: number) => void;
   idx: number;
 };
 
@@ -41,26 +43,32 @@ const ExperienceBox = ({ data, isExpanded, setExpandedBoxIndex, idx }: Experienc
 
 type ExperienceSectionProps = {
   experienceData: Array<experienceType>;
+  indexOffset: number;
 };
 
-const ExperienceSection = ({ experienceData }: ExperienceSectionProps) => {
-  const [expandedBoxIndex, setExpandedBoxIndex] = useState(-1);
+const ExperienceSection = ({ experienceData, indexOffset }: ExperienceSectionProps) => {
+  const { expandedBoxIndex, setExpandedBoxIndex } = React.useContext(ExpandedBoxContext);
 
   return (
     <React.Fragment>
-      {experienceData.map((data: experienceType, idx: number) => (
-        <ExperienceBox
-          data={data}
-          isExpanded={expandedBoxIndex === idx}
-          setExpandedBoxIndex={setExpandedBoxIndex}
-          idx={idx}
-          key={idx}
-        />
-      ))}
+      {experienceData.map((data: experienceType, idx: number) => {
+        idx += indexOffset;
+        return (
+          <ExperienceBox
+            data={data}
+            isExpanded={expandedBoxIndex === idx}
+            setExpandedBoxIndex={setExpandedBoxIndex}
+            idx={idx}
+            key={idx}
+          />
+        );
+      })}
     </React.Fragment>
   );
 };
 
-export const WorkSection = () => <ExperienceSection experienceData={workData} />;
+export const WorkSection = () => <ExperienceSection experienceData={workData} indexOffset={0} />;
 
-export const EducationSection = () => <ExperienceSection experienceData={educationData} />;
+export const EducationSection = () => (
+  <ExperienceSection experienceData={educationData} indexOffset={workData.length} />
+);
