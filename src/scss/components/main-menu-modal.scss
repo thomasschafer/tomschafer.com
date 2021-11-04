@@ -8,6 +8,13 @@
   overflow: auto;
   background-color: $menu-bar-color;
   color: $text-color;
+  opacity: 1;
+  transition: all 0.1s linear;
+
+  &.transparent {
+    opacity: 0;
+    transition: all 0.1s linear;
+  }
 
   .main-menu-modal-inner {
     @include centre-column-flex;

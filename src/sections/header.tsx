@@ -1,11 +1,10 @@
-import { divRef, section } from "../types/types";
-
 type MenuIconProps = {
-  toggleMainMenu: (showMainMenu: boolean) => void;
   showMainMenu: boolean;
+  mainMenuIsTransparent: boolean;
+  toggleMainMenu: (showMainMenu: boolean) => void;
 };
 
-const MenuIcon = ({ toggleMainMenu, showMainMenu }: MenuIconProps) => (
+const MenuIcon = ({ showMainMenu, mainMenuIsTransparent, toggleMainMenu }: MenuIconProps) => (
   <div className="show-main-menu-link" onClick={() => toggleMainMenu(showMainMenu)}>
     <div className="menu-text">Menu</div>
     <svg
@@ -15,7 +14,7 @@ const MenuIcon = ({ toggleMainMenu, showMainMenu }: MenuIconProps) => (
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       id="main-menu-icon"
-      className={showMainMenu ? "close-menu" : "open-menu"}
+      className={mainMenuIsTransparent ? "open-menu" : "close-menu"}
     >
       <path
         id="background-circle"
@@ -30,17 +29,15 @@ const MenuIcon = ({ toggleMainMenu, showMainMenu }: MenuIconProps) => (
 );
 
 type HeaderSectionProps = {
-  sections: Array<section>;
-  toggleMainMenu: (showMainMenu: boolean) => void;
   showMainMenu: boolean;
-  executeScroll: (ref: divRef) => () => void;
+  mainMenuIsTransparent: boolean;
+  toggleMainMenu: (showMainMenu: boolean) => void;
 };
 
 export const HeaderSection = ({
-  sections,
-  toggleMainMenu,
   showMainMenu,
-  executeScroll,
+  mainMenuIsTransparent,
+  toggleMainMenu,
 }: HeaderSectionProps) => (
   <header>
     <div id="navbar-padding" />
@@ -51,7 +48,11 @@ export const HeaderSection = ({
             <img src="tomschafer_logo_192.png" alt="Site logo" />
           </a>
         </div>
-        <MenuIcon toggleMainMenu={toggleMainMenu} showMainMenu={showMainMenu} />
+        <MenuIcon
+          showMainMenu={showMainMenu}
+          mainMenuIsTransparent={mainMenuIsTransparent}
+          toggleMainMenu={toggleMainMenu}
+        />
       </div>
     </div>
   </header>

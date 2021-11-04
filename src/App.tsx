@@ -17,6 +17,7 @@ export const ExpandedBoxContext = React.createContext({
 
 const App = () => {
   const [showMainMenu, setShowMainMenu] = useState(false);
+  const [mainMenuIsTransparent, setMainMenuIsTransparent] = useState(true);
   const [expandedBoxIndex, setExpandedBoxIndex] = useState(-1);
 
   let prevScrollpos = window.pageYOffset;
@@ -35,11 +36,18 @@ const App = () => {
   };
 
   const toggleMainMenu = (currentShowMainMenu: boolean) => {
-    setShowMainMenu(!currentShowMainMenu);
     if (currentShowMainMenu) {
+      setMainMenuIsTransparent(true);
       document.body.classList.remove("overflow-hidden");
+      setTimeout(() => {
+        setShowMainMenu(false);
+      }, 250);
     } else {
+      setShowMainMenu(true);
       document.body.classList.add("overflow-hidden");
+      setTimeout(() => {
+        setMainMenuIsTransparent(false);
+      }, 0);
     }
   };
 
@@ -74,18 +82,19 @@ const App = () => {
         },
       }}
     >
-      {showMainMenu && (
+      {(showMainMenu || !mainMenuIsTransparent) && (
         <MainMenu
+          isTransparent={mainMenuIsTransparent}
           sections={sections}
           toggleMainMenu={toggleMainMenu}
           executeScroll={executeScroll}
         />
       )}
+
       <div className="App">
         <HeaderSection
-          executeScroll={executeScroll}
-          sections={sections}
           showMainMenu={showMainMenu}
+          mainMenuIsTransparent={mainMenuIsTransparent}
           toggleMainMenu={toggleMainMenu}
         />
         {sections.map((section) => (

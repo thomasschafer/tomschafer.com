@@ -29,6 +29,16 @@
       flex-direction: row;
       align-items: center;
 
+      svg {
+        max-height: 45px;
+        transition: transform 0.1s linear;
+
+        &:hover {
+          transform: scale(1.06);
+          transition: transform 0.1s linear;
+        }
+      }
+
       .menu-text {
         padding-right: 10px;
         font-size: $medium-text;
@@ -77,6 +87,12 @@
       position: -webkit-sticky;
       position: sticky;
       left: 30px;
+      transition: transform 0.1s linear;
+
+      &:hover {
+        transform: scale(1.06);
+        transition: transform 0.1s linear;
+      }
 
       img {
         height: 50px;
