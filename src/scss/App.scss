@@ -54,21 +54,12 @@
         }
 
         .description-text {
-          display: none;
+          text-align: left;
+          line-height: 170%;
         }
 
         &.active {
           background-color: $card-color-selected;
-
-          .read-more-text {
-            display: none;
-          }
-
-          .description-text {
-            display: block;
-            text-align: left;
-            line-height: 170%;
-          }
         }
 
         .logo-container {

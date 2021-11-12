@@ -8,35 +8,46 @@ export type experienceType = {
 
 export const workData: Array<experienceType> = [
   {
-    title: "Lambert Labs",
-    subtitle: "Software Engineer",
+    title: "Software Engineer",
+    subtitle: "Lambert Labs",
     description: [
-      "Development for a variety of clients with varied technology stacks, mainly using Python and JavaScript/TypeScript. Highlights:",
-      "Integrated React with an existing Django site for an education client to build dynamic messaging dashboard",
-      "Built REST endpoints in Django to communicate with React frontends",
-      "Rebuilt various parts a legal client's website, using a combination of Django templating, vanilla Javascript and React with Typescript",
-      "Communicating with multiple stakeholders from across the client businesses to understand requirements, propose ideas and demonstrate solutions",
+      "Software development for a variety of clients with varied technology stacks, predominantly using Python and TypeScript. Highlights include:",
+      "Integrated React with an existing Django site for an education client to build a dynamic user information dashboard, and implemented caching to dramatically reduce API calls and improve performance",
+      "Built various REST endpoints in Django to communicate with React frontends, with a focus on minimising load on the database",
+      "Rebuilt various parts a legal client's website as part of a site redesign, using a combination of Django templating, vanilla JavaScript, and React with Typescript",
+      "Communicating with multiple stakeholders from across the client businesses and external agencies to understand requirements, propose ideas and demonstrate solutions",
     ],
     type: "job",
     logoPath: "images/lambert_labs_logo.jpeg",
   },
   {
-    title: "Play Sports Network",
-    subtitle: "Data Analyst",
+    title: "Data Analyst",
+    subtitle: "Play Sports Network",
     description: [
-      "Using Python and SQL to perform analysis for colleagues across the business, helping inform app and social media strategies. Highlights:",
-      "Analysing comment sentiment towards brands using Google’s NLP API in Python, boosting sponsorship retention",
+      "Using Python and SQL to perform analysis for colleagues across the business, helping inform app and social media strategies. Highlights include:",
+      "Analysing comment sentiment towards brands using Google’s NLP API in Python, boosting sponsor engagement and retention",
       "Using the Python library Keras to build models predicting the success of videos based on the thumbnail, helping inform thumbnail design",
     ],
     type: "job",
     logoPath: "images/play_sports_network_logo.png",
   },
+  {
+    title: "Mathematics Research Intern",
+    subtitle: "University of Bristol",
+    description: [
+      "",
+      "Studying dynamical systems, specifically orbits in quotient spaces",
+      "Working with a researcher to develop and prove hypotheses, and presenting to an audience of academics and students",
+    ],
+    type: "job",
+    logoPath: "images/university_of_bristol_logo.jpeg",
+  },
 ];
 
 export const educationData: Array<experienceType> = [
   {
-    title: "University of Bristol",
-    subtitle: "BSc Mathematics",
+    title: "BSc Mathematics",
+    subtitle: "University of Bristol",
     description: [
       "First class honours (final grade 76%), including 89% in final year project on p-adic numbers.",
     ],

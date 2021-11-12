@@ -1,4 +1,5 @@
 import React from "react";
+import AnimateHeight from "react-animate-height";
 
 import { educationData, workData, experienceType } from "../data/experience";
 import { ExpandedBoxContext } from "../App";
@@ -21,21 +22,25 @@ const ExperienceBox = ({ data, isExpanded, setExpandedBoxIndex, idx }: Experienc
 
   return (
     <div className={`info-box ${data.type === "education" ? "education" : ""}`}>
-      <div className={`info-box-inner pointer ${isExpanded && " active"}`} onClick={toggleExpanded}>
+      <div className={`info-box-inner pointer`} onClick={toggleExpanded}>
         <div className="logo-container">
           <img alt={data.title + " Logo"} src={data.logoPath} />
         </div>
         <h2>{data.title}</h2>
         <h3>{data.subtitle}</h3>
-        <p className="read-more-text">Read more</p>
-        <div className="description-text">
-          <p>{data.description[0]}</p>
-          <ul>
-            {data.description.slice(1).map((line, idx) => (
-              <li key={idx}>{line}</li>
-            ))}
-          </ul>
-        </div>
+        <AnimateHeight duration={500} height={isExpanded ? 0 : "auto"}>
+          <p className="read-more-text">Read more</p>
+        </AnimateHeight>
+        <AnimateHeight duration={500} height={isExpanded ? "auto" : 0}>
+          <div className="description-text">
+            <p>{data.description[0]}</p>
+            <ul>
+              {data.description.slice(1).map((line, idx) => (
+                <li key={idx}>{line}</li>
+              ))}
+            </ul>
+          </div>
+        </AnimateHeight>
       </div>
     </div>
   );
