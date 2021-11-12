@@ -4,6 +4,8 @@ import AnimateHeight from "react-animate-height";
 import { educationData, workData, experienceType } from "../data/experience";
 import { ExpandedBoxContext } from "../App";
 
+const HEIGHT_ANIMATION_DURATION_MS = 250;
+
 type ExperienceBoxProps = {
   data: experienceType;
   isExpanded: boolean;
@@ -28,10 +30,10 @@ const ExperienceBox = ({ data, isExpanded, setExpandedBoxIndex, idx }: Experienc
         </div>
         <h2>{data.title}</h2>
         <h3>{data.subtitle}</h3>
-        <AnimateHeight duration={500} height={isExpanded ? 0 : "auto"}>
+        <AnimateHeight duration={HEIGHT_ANIMATION_DURATION_MS} height={isExpanded ? 0 : "auto"}>
           <p className="read-more-text">Read more</p>
         </AnimateHeight>
-        <AnimateHeight duration={500} height={isExpanded ? "auto" : 0}>
+        <AnimateHeight duration={HEIGHT_ANIMATION_DURATION_MS} height={isExpanded ? "auto" : 0}>
           <div className="description-text">
             <p>{data.description[0]}</p>
             <ul>
