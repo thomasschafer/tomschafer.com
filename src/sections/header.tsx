@@ -38,22 +38,39 @@ export const HeaderSection = ({
   showMainMenu,
   mainMenuIsTransparent,
   toggleMainMenu,
-}: HeaderSectionProps) => (
-  <header>
-    <div id="navbar-padding" />
-    <div id="navbar" className="App-header">
-      <div className="navbar-inner max-width-container margin-lr-auto">
-        <div className="site-logo">
-          <a href="/">
-            <img src="tomschafer_logo_192.png" alt="Site logo" />
-          </a>
+}: HeaderSectionProps) => {
+  let prevScrollpos = window.pageYOffset;
+
+  window.onscroll = () => {
+    const currentScrollPos = window.pageYOffset;
+    const navBar = document.getElementById("navbar");
+    if (navBar) {
+      if (prevScrollpos > currentScrollPos) {
+        navBar.classList.remove("navbar-hide");
+      } else {
+        navBar.classList.add("navbar-hide");
+      }
+      prevScrollpos = currentScrollPos;
+    }
+  };
+
+  return (
+    <header>
+      <div id="navbar-padding" />
+      <div id="navbar">
+        <div className="navbar-inner max-width-container margin-lr-auto">
+          <div className="site-logo">
+            <a href="/">
+              <img src="tomschafer_logo_192.png" alt="Site logo" />
+            </a>
+          </div>
+          <MenuIcon
+            showMainMenu={showMainMenu}
+            mainMenuIsTransparent={mainMenuIsTransparent}
+            toggleMainMenu={toggleMainMenu}
+          />
         </div>
-        <MenuIcon
-          showMainMenu={showMainMenu}
-          mainMenuIsTransparent={mainMenuIsTransparent}
-          toggleMainMenu={toggleMainMenu}
-        />
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};

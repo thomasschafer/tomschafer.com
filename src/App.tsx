@@ -20,21 +20,6 @@ const App = () => {
   const [mainMenuIsTransparent, setMainMenuIsTransparent] = useState(true);
   const [expandedBoxIndex, setExpandedBoxIndex] = useState(-1);
 
-  let prevScrollpos = window.pageYOffset;
-
-  window.onscroll = () => {
-    const currentScrollPos = window.pageYOffset;
-    const navBar = document.getElementById("navbar");
-    if (navBar) {
-      if (prevScrollpos > currentScrollPos) {
-        navBar.classList.remove("navbar-hide");
-      } else {
-        navBar.classList.add("navbar-hide");
-      }
-      prevScrollpos = currentScrollPos;
-    }
-  };
-
   const toggleMainMenu = (currentShowMainMenu: boolean) => {
     if (currentShowMainMenu) {
       setMainMenuIsTransparent(true);
