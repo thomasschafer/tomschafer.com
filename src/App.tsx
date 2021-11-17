@@ -6,7 +6,6 @@ import { MainMenu } from "./mainMenu";
 import { AboutMe } from "./sections/aboutMe";
 import { EducationSection, WorkSection } from "./sections/experience";
 import { HeaderSection } from "./sections/header";
-import { LinksSection } from "./sections/links";
 import { TechnologiesSection } from "./sections/technologies";
 import { divRef, divRefCurrent, section } from "./types/types";
 
@@ -55,7 +54,6 @@ const App = () => {
     { title: "Experience", component: <WorkSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Education", component: <EducationSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Technologies", component: <TechnologiesSection />, ref: useRef<divRefCurrent>(null) },
-    { title: "Links", component: <LinksSection />, ref: useRef<divRefCurrent>(null) },
   ];
 
   return (

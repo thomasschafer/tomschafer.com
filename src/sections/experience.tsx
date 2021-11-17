@@ -23,7 +23,7 @@ const ExperienceBox = ({ data, isExpanded, setExpandedBoxIndex, idx }: Experienc
   };
 
   return (
-    <div className={`info-box ${data.type === "education" ? "education" : ""}`}>
+    <div className={`info-box hover-effect ${data.type === "education" ? "education" : ""}`}>
       <div className={`info-box-inner pointer`} onClick={toggleExpanded}>
         <div className="logo-container">
           <img alt={data.title + " Logo"} src={data.logoPath} />
