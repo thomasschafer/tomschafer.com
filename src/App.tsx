@@ -50,7 +50,12 @@ const App = () => {
   };
 
   const sections: Array<section> = [
-    { title: "About Me", component: <AboutMe />, ref: useRef<divRefCurrent>(null) },
+    {
+      title: "About Me",
+      hideTitle: true,
+      component: <AboutMe />,
+      ref: useRef<divRefCurrent>(null),
+    },
     { title: "Experience", component: <WorkSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Education", component: <EducationSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Technologies", component: <TechnologiesSection />, ref: useRef<divRefCurrent>(null) },
@@ -86,7 +91,7 @@ const App = () => {
             className="experience-container max-width-container"
             key={section.title}
           >
-            <h2 className="margin-bottom-10">{section.title}</h2>
+            {section.hideTitle ? <></> : <h2 className="margin-bottom-10">{section.title}</h2>}
             {section.component}
           </div>
         ))}
