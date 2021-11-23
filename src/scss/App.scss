@@ -41,8 +41,12 @@
       .info-box-inner {
         @include centre-column-flex;
         background-color: $card-color;
-        padding: 20px 50px;
         border-radius: 5px;
+        padding: 20px 50px;
+
+        @media screen and (max-width: $mobile-breakpoint) {
+          padding: 20px;
+        }
 
         &.pointer {
           cursor: pointer;

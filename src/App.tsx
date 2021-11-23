@@ -91,7 +91,11 @@ const App = () => {
             className="experience-container max-width-container"
             key={section.title}
           >
-            {section.hideTitle ? <></> : <h2 className="margin-bottom-10">{section.title}</h2>}
+            {section.hideTitle ? (
+              <div className="h-4"></div>
+            ) : (
+              <h2 className="margin-bottom-10">{section.title}</h2>
+            )}
             {section.component}
           </div>
         ))}

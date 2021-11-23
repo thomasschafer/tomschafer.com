@@ -1,6 +1,6 @@
 @mixin max-width-container {
   width: 92%;
-  max-width: 800px;
+  max-width: $max-width-container-width;
   margin: 0 20px;
 }
 
