@@ -1,9 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
+
 export type experienceType = {
   title: string;
   subtitle: string;
   description: Array<string>;
   type: string;
   logoPath: string;
+  experienceId: string;
 };
 
 export const workData: Array<experienceType> = [
@@ -19,6 +22,7 @@ export const workData: Array<experienceType> = [
     ],
     type: "job",
     logoPath: "images/lambert_labs_logo.jpeg",
+    experienceId: uuidv4(),
   },
   {
     title: "Data Analyst",
@@ -30,6 +34,7 @@ export const workData: Array<experienceType> = [
     ],
     type: "job",
     logoPath: "images/play_sports_network_logo.png",
+    experienceId: uuidv4(),
   },
   {
     title: "Mathematics Research Intern",
@@ -41,6 +46,7 @@ export const workData: Array<experienceType> = [
     ],
     type: "job",
     logoPath: "images/university_of_bristol_logo.jpeg",
+    experienceId: uuidv4(),
   },
 ];
 
@@ -53,5 +59,6 @@ export const educationData: Array<experienceType> = [
     ],
     type: "education",
     logoPath: "images/university_of_bristol_logo.jpeg",
+    experienceId: uuidv4(),
   },
 ];

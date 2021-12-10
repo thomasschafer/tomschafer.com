@@ -1,45 +1,49 @@
 import React from "react";
 import AnimateHeight from "react-animate-height";
 
-import { educationData, workData, experienceType } from "../data/experience";
+import { projectData, projectType } from "../data/projects";
 import { ExpandedBoxContext } from "../App";
+import { FormatLinksWithCommasAndStrings } from "../utils";
 
 const HEIGHT_ANIMATION_DURATION_MS = 250;
 
 type ExperienceBoxProps = {
-  data: experienceType;
+  data: projectType;
   isExpanded: boolean;
   setExpandedBoxId: (newId: string) => void;
 };
 
-const ExperienceBox = ({ data, isExpanded, setExpandedBoxId }: ExperienceBoxProps) => {
+const ProjectBox = ({ data, isExpanded, setExpandedBoxId }: ExperienceBoxProps) => {
   const toggleExpanded = () => {
     if (isExpanded) {
       setExpandedBoxId("");
     } else {
-      setExpandedBoxId(data.experienceId);
+      setExpandedBoxId(data.projectId);
     }
   };
 
   return (
-    <div className={`info-box hover-effect ${data.type === "education" ? "education" : ""}`}>
+    <div className={"info-box hover-effect"}>
       <div className={"info-box-inner pointer"} onClick={toggleExpanded}>
-        <div className="logo-container">
-          <img alt={data.title + " Logo"} src={data.logoPath} />
+        <div className="image-container">
+          <img alt={data.title + " Logo"} src={data.imagePath} />
         </div>
-        <h2>{data.title}</h2>
+        <a className="project-link" href={data.link} target="_blank" rel="noreferrer">
+          <h2 className="gradient-text gradient-underline">{data.title}</h2>
+        </a>
         <h3>{data.subtitle}</h3>
         <AnimateHeight duration={HEIGHT_ANIMATION_DURATION_MS} height={isExpanded ? 0 : "auto"}>
           <p className="read-more-text">Read more</p>
         </AnimateHeight>
         <AnimateHeight duration={HEIGHT_ANIMATION_DURATION_MS} height={isExpanded ? "auto" : 0}>
           <div className="description-text">
-            <p>{data.description[0]}</p>
             <ul>
-              {data.description.slice(1).map((line, idx) => (
+              {data.description.map((line, idx) => (
                 <li key={idx}>{line}</li>
               ))}
             </ul>
+            Hosted on{" "}
+            {data.githubLinks && <FormatLinksWithCommasAndStrings links={data.githubLinks} />}
           </div>
         </AnimateHeight>
       </div>
@@ -47,22 +51,16 @@ const ExperienceBox = ({ data, isExpanded, setExpandedBoxId }: ExperienceBoxProp
   );
 };
 
-type ExperienceSectionProps = {
-  experienceData: Array<experienceType>;
-  indexOffset: number;
-};
-
-const ExperienceSection = ({ experienceData, indexOffset }: ExperienceSectionProps) => {
+export const ProjectsSection = () => {
   const { expandedBoxId, setExpandedBoxId } = React.useContext(ExpandedBoxContext);
 
   return (
     <React.Fragment>
-      {experienceData.map((data: experienceType, idx: number) => {
-        idx += indexOffset;
+      {projectData.map((data: projectType, idx: number) => {
         return (
-          <ExperienceBox
+          <ProjectBox
             data={data}
-            isExpanded={expandedBoxId === data.experienceId}
+            isExpanded={expandedBoxId === data.projectId}
             setExpandedBoxId={setExpandedBoxId}
             key={idx}
           />
@@ -71,9 +69,3 @@ const ExperienceSection = ({ experienceData, indexOffset }: ExperienceSectionPro
     </React.Fragment>
   );
 };
-
-export const WorkSection = () => <ExperienceSection experienceData={workData} indexOffset={0} />;
-
-export const EducationSection = () => (
-  <ExperienceSection experienceData={educationData} indexOffset={workData.length} />
-);

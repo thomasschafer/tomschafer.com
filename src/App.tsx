@@ -6,18 +6,18 @@ import { MainMenu } from "./mainMenu";
 import { AboutMe } from "./sections/aboutMe";
 import { EducationSection, WorkSection } from "./sections/experience";
 import { HeaderSection } from "./sections/header";
-import { TechnologiesSection } from "./sections/technologies";
+import { ProjectsSection } from "./sections/projects";
 import { divRef, divRefCurrent, section } from "./types/types";
 
 export const ExpandedBoxContext = React.createContext({
-  expandedBoxIndex: -1,
-  setExpandedBoxIndex: (newIndex: number) => {},
+  expandedBoxId: "",
+  setExpandedBoxId: (newId: string) => {},
 });
 
 const App = () => {
   const [showMainMenu, setShowMainMenu] = useState(false);
   const [mainMenuIsTransparent, setMainMenuIsTransparent] = useState(true);
-  const [expandedBoxIndex, setExpandedBoxIndex] = useState(-1);
+  const [expandedBoxId, setExpandedBoxId] = useState("");
 
   const toggleMainMenu = (currentShowMainMenu: boolean) => {
     if (currentShowMainMenu) {
@@ -56,17 +56,17 @@ const App = () => {
       component: <AboutMe />,
       ref: useRef<divRefCurrent>(null),
     },
+    { title: "Projects", component: <ProjectsSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Experience", component: <WorkSection />, ref: useRef<divRefCurrent>(null) },
     { title: "Education", component: <EducationSection />, ref: useRef<divRefCurrent>(null) },
-    { title: "Technologies", component: <TechnologiesSection />, ref: useRef<divRefCurrent>(null) },
   ];
 
   return (
     <ExpandedBoxContext.Provider
       value={{
-        expandedBoxIndex: expandedBoxIndex,
-        setExpandedBoxIndex: (newIndex: number) => {
-          setExpandedBoxIndex(newIndex);
+        expandedBoxId: expandedBoxId,
+        setExpandedBoxId: (newId: string) => {
+          setExpandedBoxId(newId);
         },
       }}
     >
