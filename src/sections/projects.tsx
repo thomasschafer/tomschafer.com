@@ -28,14 +28,26 @@ const ProjectBox = ({ data, isExpanded, setExpandedBoxId }: ExperienceBoxProps) 
         <div className="image-container">
           <img alt={data.title + " Logo"} src={data.imagePath} />
         </div>
-        <a className="project-link" href={data.link} target="_blank" rel="noreferrer">
+        <a
+          className="project-link"
+          href={data.link}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <h2 className="gradient-text gradient-underline">{data.title}</h2>
         </a>
         <h3>{data.subtitle}</h3>
         <AnimateHeight duration={HEIGHT_ANIMATION_DURATION_MS} height={isExpanded ? 0 : "auto"}>
           <p className="read-more-text">Read more</p>
         </AnimateHeight>
-        <AnimateHeight duration={HEIGHT_ANIMATION_DURATION_MS} height={isExpanded ? "auto" : 0}>
+        <AnimateHeight
+          className="description-text-container"
+          duration={HEIGHT_ANIMATION_DURATION_MS}
+          height={isExpanded ? "auto" : 0}
+        >
           <div className="description-text">
             <ul>
               {data.description.map((line, idx) => (
