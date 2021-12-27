@@ -28,13 +28,4 @@ export const projectData: Array<projectType> = [
     imagePath: "images/kobble_screenshot.png",
     projectId: uuidv4(),
   },
-  {
-    title: "tomschafer.com",
-    subtitle: "Personal website",
-    link: "https://tomschafer.com",
-    githubLinks: ["https://github.com/thomasschafer/personal-website"],
-    description: ["Built using React and Typescript", "Styled using SCSS", "Hosted on Netlify"],
-    imagePath: "images/personal_site_screenshot.png",
-    projectId: uuidv4(),
-  },
 ];
