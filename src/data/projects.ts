@@ -22,8 +22,8 @@ export const projectData: Array<projectType> = [
     description: [
       "Backend built using Node.js with TypeScript, using MongoDB as a database",
       "Frontend built using React with TypeScript, and styled using TailwindCSS",
-      "Backend hosted on AWS EC2, utilising Docker and Nginx",
-      "Frontend hosted on AWS S3 using CloudFront",
+      "Backend hosted on Digital Ocean, utilising Docker and Nginx",
+      "Frontend hosted on Netlify",
     ],
     imagePath: "images/kobble_screenshot.png",
     projectId: uuidv4(),

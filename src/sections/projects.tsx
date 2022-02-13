@@ -54,7 +54,7 @@ const ProjectBox = ({ data, isExpanded, setExpandedBoxId }: ExperienceBoxProps) 
                 <li key={idx}>{line}</li>
               ))}
             </ul>
-            Hosted on{" "}
+            Code available at{" "}
             {data.githubLinks && <FormatLinksWithCommasAndStrings links={data.githubLinks} />}
           </div>
         </AnimateHeight>
