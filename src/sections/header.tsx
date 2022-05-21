@@ -1,3 +1,5 @@
+import React from "react";
+
 type MenuIconProps = {
   showMainMenu: boolean;
   mainMenuIsTransparent: boolean;
@@ -34,6 +36,8 @@ type HeaderSectionProps = {
   toggleMainMenu: (showMainMenu: boolean) => void;
 };
 
+const NAVBAR_HEIGHT = 80;
+
 export const HeaderSection = ({
   showMainMenu,
   mainMenuIsTransparent,
@@ -45,7 +49,7 @@ export const HeaderSection = ({
     const currentScrollPos = window.pageYOffset;
     const navBar = document.getElementById("navbar");
     if (navBar) {
-      if (prevScrollpos > currentScrollPos) {
+      if (prevScrollpos > currentScrollPos || currentScrollPos < NAVBAR_HEIGHT) {
         navBar.classList.remove("navbar-hide");
       } else {
         navBar.classList.add("navbar-hide");

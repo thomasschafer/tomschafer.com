@@ -1,3 +1,5 @@
+import React from "react";
+
 export const LinksSection = () => (
   <div className="links-container">
     <a

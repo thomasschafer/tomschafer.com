@@ -1,3 +1,4 @@
+import React from "react";
 import { divRef, section } from "./types/types";
 
 type MainMenuProps = {

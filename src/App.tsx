@@ -36,9 +36,7 @@ const App = () => {
   };
 
   const executeScroll = (ref: divRef) => () => {
-    console.log("ref", ref);
     if (ref.current) {
-      console.log("ref.current", ref.current);
       ref.current.scrollIntoView();
       const navBar = document.getElementById("navbar");
       if (navBar) {
