@@ -1,0 +1,11 @@
+html {
+  background-color: #212b53;
+  color: white;
+  font-family: sans-serif;
+}
+
+body {
+  margin: auto;
+  padding: 20px 40px;
+  max-width: 800px;
+}
