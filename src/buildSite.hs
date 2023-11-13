@@ -26,13 +26,26 @@ copyItem srcDir destDir itemName = do
     (_, True) -> copyFile srcPath destPath
     _ -> return ()
 
-copyAndRenderTemplates :: FilePath -> FilePath -> IO ()
-copyAndRenderTemplates srcDir destDir = do
-  copyContents srcDir destDir
+renderPages :: FilePath -> FilePath -> FilePath -> IO ()
+renderPages srcDir postPreviewDir destDir = do
+  templates <- listDirectory srcDir
+  mapM_ renderAndCopy templates
+  where
+    renderAndCopy :: FilePath -> IO ()
+    renderAndCopy path = do
+      contents <- readFile (srcDir </> path)
+      -- TODO: render template strings here, using postPreviewDir
+      writeFile (destDir </> path) contents
+
+createPostPages :: FilePath -> FilePath -> IO ()
+createPostPages postDir destDir = do
+  putStrLn "Todo"
 
 main :: IO ()
 main = do
   let destDir = "out"
   removeDirectoryRecursive destDir
   copyContents "static" destDir
-  copyAndRenderTemplates "src/templates" destDir
+  -- TODO: Load blog posts from "blog_posts" dir
+  renderPages "src/pages" "src/templates/post-preview.html" destDir
+  createPostPages "src/templates/post.html" destDir
