@@ -2,6 +2,7 @@
 
 echo "Building..."
 
-runghc src/buildSite.hs
+stack build
+stack exec personal-website
 
 echo "Build complete"

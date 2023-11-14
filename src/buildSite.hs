@@ -5,7 +5,6 @@ import System.Directory
     doesFileExist,
     listDirectory,
     removeDirectoryRecursive,
-    removeFile,
   )
 import System.FilePath ((</>))
 
@@ -44,8 +43,10 @@ createPostPages postDir destDir = do
 main :: IO ()
 main = do
   let destDir = "out"
-  removeDirectoryRecursive destDir
+  destDirExists <- doesDirectoryExist destDir
+  if destDirExists then removeDirectoryRecursive destDir else putStrLn "" -- TODO: is there a better way of doing this?
   copyContents "static" destDir
+  blogPosts <- listDirectory "./blog_posts"
   -- TODO: Load blog posts from "blog_posts" dir
   renderPages "src/pages" "src/templates/post-preview.html" destDir
   createPostPages "src/templates/post.html" destDir
