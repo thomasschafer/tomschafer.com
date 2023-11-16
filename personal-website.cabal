@@ -17,6 +17,7 @@ executable personal-website
                        directory >= 1.3.7.1 && < 2,
                        filepath >= 1.4.2.2 && < 2,
                        pandoc >= 3.0.1 && < 4,
+                       pandoc-types >= 1.23.1 && < 2,
                        text >= 2.0.2 && < 3,
                        yaml >= 0.11.11.2 && < 1
   ghc-options:         -Wall
@@ -28,3 +29,6 @@ executable personal-website
                        -Wmissing-home-modules
                        -Wpartial-fields
                        -Wredundant-constraints
+  default-extensions:  ImportQualifiedPost,
+                       NamedFieldPuns,
+                       OverloadedStrings

@@ -1,40 +1,29 @@
-{-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE OverloadedStrings #-}
-
-import Control.Monad (filterM, when)
-import Data.Aeson (FromJSON)
-import Data.ByteString qualified as B
-import Data.Map (Map)
+import Control.Monad (when)
 import Data.Map qualified as M
-import Data.Maybe (fromJust, fromMaybe)
 import Data.Text (Text)
-import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
-import Data.Yaml
-import Debug.Trace (trace)
-import GHC.Generics (Generic)
-import System.Directory (copyFile, createDirectoryIfMissing, doesDirectoryExist, doesFileExist, listDirectory, removeDirectoryRecursive)
+import System.Directory
+  ( copyFile,
+    createDirectoryIfMissing,
+    doesDirectoryExist,
+    doesFileExist,
+    listDirectory,
+    removeDirectoryRecursive,
+  )
 import System.FilePath (takeExtension, (</>))
-import System.IO (readFile)
-import Text.Blaze.Html (Html)
 import Text.Pandoc
-  ( Extension (..),
+  ( Extension (Ext_yaml_metadata_block),
     Meta (Meta),
-    MetaValue,
     Pandoc (Pandoc),
-    PandocError,
     ReaderOptions (readerExtensions, readerStandalone),
-    WriterOptions (WriterOptions),
     def,
     enableExtension,
-    lookupMeta,
     readMarkdown,
-    runIO,
     runIOorExplode,
-    writeHtml5,
     writeHtml5String,
   )
-import Text.Pandoc.Error (PandocError)
+import Text.Pandoc.Definition (MetaValue (MetaMap))
+import Text.Pandoc.Shared (stringify)
 
 copyContents :: FilePath -> FilePath -> IO ()
 copyContents srcDir destDir = do
@@ -83,12 +72,13 @@ loadMarkdownFiles dir = do
       (metaData, content) <- processMarkdown fileContent
       return (file, metaData, content)
 
--- data ImageData = ImageData {url :: String, alt :: String}
+data ImageData = ImageData {url :: Text, alt :: Text}
+  deriving (Show)
 
 data Frontmatter = Frontmatter
-  { title :: String,
-    pubDate :: String
-    -- image :: ImageData
+  { title :: Text,
+    pubDate :: Text,
+    image :: ImageData
   }
   deriving (Show)
 
@@ -98,17 +88,22 @@ processMarkdown filePath = runIOorExplode $ do
     readMarkdown
       ( def
           { readerStandalone = True,
-            readerExtensions =
-              enableExtension Ext_yaml_metadata_block (readerExtensions def)
+            readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)
           }
       )
       filePath
-  let fromMeta k = show . fromJust $ M.lookup k meta
+  let title = maybe "" stringify $ M.lookup "title" meta
+  let pubDate = maybe "" stringify $ M.lookup "pubDate" meta
+  let imageMeta = case M.lookup "image" meta of
+        Just (MetaMap m) -> m
+        _ -> M.empty
+  let imageUrl = maybe "" stringify $ M.lookup "url" imageMeta
+  let imageAlt = maybe "" stringify $ M.lookup "alt" imageMeta
   let metaData =
         Frontmatter
-          { title = fromMeta "title",
-            pubDate = fromMeta "pubDate"
-            -- image = fromMeta "image"
+          { title,
+            pubDate,
+            image = ImageData {url = imageUrl, alt = imageAlt}
           }
   res <- writeHtml5String def pandoc
   return (metaData, res)
@@ -118,7 +113,6 @@ main = do
   let destDir = "out"
   destDirExists <- doesDirectoryExist destDir
   when destDirExists $ removeDirectoryRecursive destDir
-  putStrLn "Hello 9"
   copyContents "static" destDir
   blogPosts <- loadMarkdownFiles "./blog_posts"
   mapM_ showStuff blogPosts
@@ -128,8 +122,6 @@ main = do
   where
     showStuff :: (FilePath, Frontmatter, Text) -> IO ()
     showStuff (fp, fm, t) = do
-      print "Showing:::"
       print fp
       print fm
       print t
-      print " --- "
