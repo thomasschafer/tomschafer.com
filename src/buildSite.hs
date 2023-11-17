@@ -1,10 +1,14 @@
 import Control.Monad (when)
+import Data.Char (toLower)
 import Data.Map qualified as M
-import Data.Text (Text)
+import Data.Text (Text, unpack)
 import Data.Text.IO qualified as TIO
+import Debug.Trace (trace)
+import GHC.Base (Opaque (O))
 import System.Directory
   ( copyFile,
     createDirectoryIfMissing,
+    createFileLink,
     doesDirectoryExist,
     doesFileExist,
     listDirectory,
@@ -20,9 +24,12 @@ import Text.Pandoc
     enableExtension,
     readMarkdown,
     runIOorExplode,
+    runPure,
     writeHtml5String,
   )
 import Text.Pandoc.Definition (MetaValue (MetaMap))
+import Text.Pandoc.Highlighting (Style, pygments)
+import Text.Pandoc.Options (ReaderOptions, WriterOptions, writerHighlightStyle)
 import Text.Pandoc.Shared (stringify)
 
 copyContents :: FilePath -> FilePath -> IO ()
@@ -42,8 +49,8 @@ copyItem srcDir destDir itemName = do
     (_, True) -> copyFile srcPath destPath
     _ -> return ()
 
-renderPages :: FilePath -> FilePath -> FilePath -> IO ()
-renderPages srcDir postPreviewDir destDir = do
+renderPages :: [BlogPost] -> FilePath -> FilePath -> FilePath -> IO ()
+renderPages blogPosts postPreviewPath srcDir destDir = do
   templates <- listDirectory srcDir
   mapM_ renderAndCopy templates
   where
@@ -53,14 +60,25 @@ renderPages srcDir postPreviewDir destDir = do
       -- TODO: render template strings here, using postPreviewDir
       writeFile (destDir </> path) contents
 
-createPostPages :: FilePath -> FilePath -> IO ()
-createPostPages postDir destDir = do
-  putStrLn "Todo"
+createPostPages :: [BlogPost] -> FilePath -> FilePath -> IO ()
+createPostPages blogPosts postTemplatePath destDir = do
+  postTemplate <- readFile postTemplatePath
+  mapM_ createPostPage blogPosts
+  where
+    createPostPage :: BlogPost -> IO ()
+    createPostPage (_, frontmatter, content) = do
+      let postFilePath =
+            map (\c -> if c == ' ' then '-' else toLower c) $
+              destDir </> ((title frontmatter :: FilePath) ++ ".html")
+      -- TODO: templating
+      TIO.writeFile (trace ("postFilePath = " ++ postFilePath) postFilePath) content
 
 isMarkdown :: FilePath -> Bool
 isMarkdown file = takeExtension file `elem` [".md", ".markdown"]
 
-loadMarkdownFiles :: String -> IO [(FilePath, Frontmatter, Text)]
+type BlogPost = (FilePath, Frontmatter, Text)
+
+loadMarkdownFiles :: String -> IO [BlogPost]
 loadMarkdownFiles dir = do
   allFiles <- listDirectory dir
   let mdFiles = filter isMarkdown allFiles
@@ -72,40 +90,42 @@ loadMarkdownFiles dir = do
       (metaData, content) <- processMarkdown fileContent
       return (file, metaData, content)
 
-data ImageData = ImageData {url :: Text, alt :: Text}
+data ImageData = ImageData {url :: String, alt :: String}
   deriving (Show)
 
 data Frontmatter = Frontmatter
-  { title :: Text,
-    pubDate :: Text,
+  { title :: String,
+    pubDate :: String,
     image :: ImageData
   }
   deriving (Show)
 
 processMarkdown :: Text -> IO (Frontmatter, Text)
 processMarkdown filePath = runIOorExplode $ do
-  pandoc@(Pandoc (Meta meta) _) <-
-    readMarkdown
-      ( def
+  let readerOpts =
+        def
           { readerStandalone = True,
             readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)
-          }
-      )
-      filePath
-  let title = maybe "" stringify $ M.lookup "title" meta
-  let pubDate = maybe "" stringify $ M.lookup "pubDate" meta
+          } ::
+          ReaderOptions
+  pandoc@(Pandoc (Meta meta) _) <- readMarkdown readerOpts filePath
+
+  let title = unpack $ maybe "" stringify $ M.lookup "title" meta -- TODO: dry
+  let pubDate = unpack $ maybe "" stringify $ M.lookup "pubDate" meta
   let imageMeta = case M.lookup "image" meta of
         Just (MetaMap m) -> m
         _ -> M.empty
-  let imageUrl = maybe "" stringify $ M.lookup "url" imageMeta
-  let imageAlt = maybe "" stringify $ M.lookup "alt" imageMeta
+  let imageUrl = unpack $ maybe "" stringify $ M.lookup "url" imageMeta
+  let imageAlt = unpack $ maybe "" stringify $ M.lookup "alt" imageMeta
   let metaData =
         Frontmatter
           { title,
             pubDate,
             image = ImageData {url = imageUrl, alt = imageAlt}
           }
-  res <- writeHtml5String def pandoc
+
+  let writerOpts = def {writerHighlightStyle = Just pygments} :: WriterOptions
+  res <- writeHtml5String writerOpts pandoc
   return (metaData, res)
 
 main :: IO ()
@@ -115,10 +135,9 @@ main = do
   when destDirExists $ removeDirectoryRecursive destDir
   copyContents "static" destDir
   blogPosts <- loadMarkdownFiles "./blog_posts"
-  mapM_ showStuff blogPosts
-  -- TODO: Load blog posts from "blog_posts" dir
-  renderPages "src/pages" "src/templates/post-preview.html" destDir
-  createPostPages "src/templates/post.html" destDir
+  mapM_ showStuff blogPosts -- TODO: delete
+  renderPages blogPosts "src/templates/post-preview.html" "src/pages" destDir
+  createPostPages blogPosts "src/templates/post.html" destDir
   where
     showStuff :: (FilePath, Frontmatter, Text) -> IO ()
     showStuff (fp, fm, t) = do
