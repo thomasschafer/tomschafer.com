@@ -1,7 +1,7 @@
 import Control.Monad (when)
 import Data.Char (toLower)
 import Data.Map qualified as M
-import Data.Text (Text, unpack)
+import Data.Text (Text, pack, unpack)
 import Data.Text.IO qualified as TIO
 import Data.Text.Lazy (fromStrict, toStrict)
 import Data.Text.Lazy qualified as Lazy
@@ -54,10 +54,17 @@ renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
   pages <- listDirectory srcDir
   mapM_ renderAndCopy pages
   where
+    renderPost :: BlogPost -> String
+    renderPost (_, frontmatter, _) = title frontmatter
+
     renderAndCopy :: FilePath -> IO ()
     renderAndCopy path = do
       content <- TIO.readFile (srcDir </> path)
-      let page = replaceWithList [Replace "{% content %}" content] (fromStrict pageTemplate)
+      -- TODO: single replace rather than list?
+      let page =
+            replaceWithList [Replace "{% posts %}" (pack $ concatMap renderPost blogPosts)] $
+              replaceWithList [Replace "{% body %}" content] $
+                fromStrict pageTemplate
       -- TODO: render template strings here, using postPreviewTemplate
       TIO.writeFile (destDir </> path) (toStrict page)
 
@@ -70,7 +77,14 @@ createPostPages blogPosts pageTemplate destDir =
       let postFilePath =
             map (\c -> if c == ' ' then '-' else toLower c) $
               destDir </> (title frontmatter ++ ".html")
-      let pageContent = replaceWithList [Replace "{% content %}" content] pageTemplate
+      let textReplacements =
+            [ Replace "{% content %}" content,
+              Replace "{% title %}" (pack $ title frontmatter),
+              Replace "{% pubDate %}" (pack $ pubDate frontmatter),
+              Replace "{% imgUrl %}" (pack $ url $ image frontmatter),
+              Replace "{% imgAlt %}" (pack $ alt $ image frontmatter)
+            ]
+      let pageContent = replaceWithList textReplacements pageTemplate
       TIO.writeFile postFilePath (toStrict pageContent)
 
 isMarkdown :: FilePath -> Bool
