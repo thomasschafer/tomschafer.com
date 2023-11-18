@@ -3,12 +3,12 @@ import Data.Char (toLower)
 import Data.Map qualified as M
 import Data.Text (Text, unpack)
 import Data.Text.IO qualified as TIO
+import Data.Text.Lazy (fromStrict, toStrict)
+import Data.Text.Lazy qualified as Lazy
 import Debug.Trace (trace)
-import GHC.Base (Opaque (O))
 import System.Directory
   ( copyFile,
     createDirectoryIfMissing,
-    createFileLink,
     doesDirectoryExist,
     doesFileExist,
     listDirectory,
@@ -24,13 +24,13 @@ import Text.Pandoc
     enableExtension,
     readMarkdown,
     runIOorExplode,
-    runPure,
     writeHtml5String,
   )
 import Text.Pandoc.Definition (MetaValue (MetaMap))
 import Text.Pandoc.Highlighting (Style, pygments)
-import Text.Pandoc.Options (ReaderOptions, WriterOptions, writerHighlightStyle)
+import Text.Pandoc.Options (WriterOptions, writerHighlightStyle)
 import Text.Pandoc.Shared (stringify)
+import Text.Replace (Replace (Replace), replaceWithList)
 
 copyContents :: FilePath -> FilePath -> IO ()
 copyContents srcDir destDir = do
@@ -49,29 +49,29 @@ copyItem srcDir destDir itemName = do
     (_, True) -> copyFile srcPath destPath
     _ -> return ()
 
-renderPages :: [BlogPost] -> FilePath -> FilePath -> FilePath -> IO ()
-renderPages blogPosts postPreviewPath srcDir destDir = do
-  templates <- listDirectory srcDir
-  mapM_ renderAndCopy templates
+renderPages :: [BlogPost] -> Text -> Text -> FilePath -> FilePath -> IO ()
+renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
+  pages <- listDirectory srcDir
+  mapM_ renderAndCopy pages
   where
     renderAndCopy :: FilePath -> IO ()
     renderAndCopy path = do
-      contents <- readFile (srcDir </> path)
-      -- TODO: render template strings here, using postPreviewDir
-      writeFile (destDir </> path) contents
+      content <- TIO.readFile (srcDir </> path)
+      let page = replaceWithList [Replace "{% content %}" content] (fromStrict pageTemplate)
+      -- TODO: render template strings here, using postPreviewTemplate
+      TIO.writeFile (destDir </> path) (toStrict page)
 
-createPostPages :: [BlogPost] -> FilePath -> FilePath -> IO ()
-createPostPages blogPosts postTemplatePath destDir = do
-  postTemplate <- readFile postTemplatePath
+createPostPages :: [BlogPost] -> Lazy.Text -> FilePath -> IO ()
+createPostPages blogPosts pageTemplate destDir =
   mapM_ createPostPage blogPosts
   where
     createPostPage :: BlogPost -> IO ()
     createPostPage (_, frontmatter, content) = do
       let postFilePath =
             map (\c -> if c == ' ' then '-' else toLower c) $
-              destDir </> ((title frontmatter :: FilePath) ++ ".html")
-      -- TODO: templating
-      TIO.writeFile (trace ("postFilePath = " ++ postFilePath) postFilePath) content
+              destDir </> (title frontmatter ++ ".html")
+      let pageContent = replaceWithList [Replace "{% content %}" content] pageTemplate
+      TIO.writeFile postFilePath (toStrict pageContent)
 
 isMarkdown :: FilePath -> Bool
 isMarkdown file = takeExtension file `elem` [".md", ".markdown"]
@@ -110,13 +110,14 @@ processMarkdown filePath = runIOorExplode $ do
           ReaderOptions
   pandoc@(Pandoc (Meta meta) _) <- readMarkdown readerOpts filePath
 
-  let title = unpack $ maybe "" stringify $ M.lookup "title" meta -- TODO: dry
-  let pubDate = unpack $ maybe "" stringify $ M.lookup "pubDate" meta
+  let maybeMetaToText = unpack . maybe "" stringify
+  let title = maybeMetaToText $ M.lookup "title" meta
+  let pubDate = maybeMetaToText $ M.lookup "pubDate" meta
   let imageMeta = case M.lookup "image" meta of
         Just (MetaMap m) -> m
         _ -> M.empty
-  let imageUrl = unpack $ maybe "" stringify $ M.lookup "url" imageMeta
-  let imageAlt = unpack $ maybe "" stringify $ M.lookup "alt" imageMeta
+  let imageUrl = maybeMetaToText $ M.lookup "url" imageMeta
+  let imageAlt = maybeMetaToText $ M.lookup "alt" imageMeta
   let metaData =
         Frontmatter
           { title,
@@ -128,19 +129,25 @@ processMarkdown filePath = runIOorExplode $ do
   res <- writeHtml5String writerOpts pandoc
   return (metaData, res)
 
+clearDestDir :: FilePath -> IO ()
+clearDestDir destDir = do
+  destDirExists <- doesDirectoryExist destDir
+  when destDirExists $ removeDirectoryRecursive destDir
+
+createPages :: FilePath -> IO ()
+createPages destDir = do
+  blogPosts <- loadMarkdownFiles "./blog_posts"
+  pageTemplate <- TIO.readFile "src/templates/page.html"
+  postPreviewTemplate <- TIO.readFile "src/templates/post-preview.html"
+  partialPostTemplate <- TIO.readFile "src/templates/post.html"
+  let postTemplate = replaceWithList [Replace "{% body %}" partialPostTemplate] (fromStrict pageTemplate)
+
+  renderPages blogPosts pageTemplate postPreviewTemplate "src/pages" destDir
+  createPostPages blogPosts postTemplate destDir
+
 main :: IO ()
 main = do
   let destDir = "out"
-  destDirExists <- doesDirectoryExist destDir
-  when destDirExists $ removeDirectoryRecursive destDir
+  clearDestDir destDir
   copyContents "static" destDir
-  blogPosts <- loadMarkdownFiles "./blog_posts"
-  mapM_ showStuff blogPosts -- TODO: delete
-  renderPages blogPosts "src/templates/post-preview.html" "src/pages" destDir
-  createPostPages blogPosts "src/templates/post.html" destDir
-  where
-    showStuff :: (FilePath, Frontmatter, Text) -> IO ()
-    showStuff (fp, fm, t) = do
-      print fp
-      print fm
-      print t
+  createPages destDir
