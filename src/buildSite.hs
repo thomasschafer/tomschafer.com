@@ -27,7 +27,7 @@ import Text.Pandoc
     writeHtml5String,
   )
 import Text.Pandoc.Definition (MetaValue (MetaMap))
-import Text.Pandoc.Highlighting (Style, pygments)
+import Text.Pandoc.Highlighting (pygments)
 import Text.Pandoc.Options (WriterOptions, writerHighlightStyle)
 import Text.Pandoc.Shared (stringify)
 import Text.Replace (Replace (Replace), replaceWithList)
@@ -55,7 +55,18 @@ renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
   mapM_ renderAndCopy pages
   where
     renderPost :: BlogPost -> String
-    renderPost (_, frontmatter, _) = title frontmatter
+    renderPost (_, frontmatter, _) =
+      unpack . toStrict $
+        replaceWithList replacements (fromStrict postPreviewTemplate)
+      where
+        replacements =
+          [ Replace "{% imgUrl %}" (pack $ url $ image frontmatter),
+            Replace "{% imgAlt %}" (pack $ alt $ image frontmatter),
+            Replace "{% title %}" (pack $ title frontmatter),
+            Replace "{% pubDate %}" (pack $ pubDate frontmatter),
+            Replace "{% description %}" (pack $ description frontmatter),
+            Replace "{% postUrl %}" (pack $ postFileName frontmatter)
+          ]
 
     renderAndCopy :: FilePath -> IO ()
     renderAndCopy path = do
@@ -68,15 +79,16 @@ renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
       -- TODO: render template strings here, using postPreviewTemplate
       TIO.writeFile (destDir </> path) (toStrict page)
 
+postFileName :: Frontmatter -> String
+postFileName = (++ ".html") . map (\c -> if c == ' ' then '-' else toLower c) . title
+
 createPostPages :: [BlogPost] -> Lazy.Text -> FilePath -> IO ()
 createPostPages blogPosts pageTemplate destDir =
   mapM_ createPostPage blogPosts
   where
     createPostPage :: BlogPost -> IO ()
     createPostPage (_, frontmatter, content) = do
-      let postFilePath =
-            map (\c -> if c == ' ' then '-' else toLower c) $
-              destDir </> (title frontmatter ++ ".html")
+      let postFilePath = destDir </> postFileName frontmatter
       let textReplacements =
             [ Replace "{% content %}" content,
               Replace "{% title %}" (pack $ title frontmatter),
@@ -110,7 +122,8 @@ data ImageData = ImageData {url :: String, alt :: String}
 data Frontmatter = Frontmatter
   { title :: String,
     pubDate :: String,
-    image :: ImageData
+    image :: ImageData,
+    description :: String
   }
   deriving (Show)
 
@@ -127,6 +140,7 @@ processMarkdown filePath = runIOorExplode $ do
   let maybeMetaToText = unpack . maybe "" stringify
   let title = maybeMetaToText $ M.lookup "title" meta
   let pubDate = maybeMetaToText $ M.lookup "pubDate" meta
+  let description = maybeMetaToText $ M.lookup "description" meta
   let imageMeta = case M.lookup "image" meta of
         Just (MetaMap m) -> m
         _ -> M.empty
@@ -136,7 +150,8 @@ processMarkdown filePath = runIOorExplode $ do
         Frontmatter
           { title,
             pubDate,
-            image = ImageData {url = imageUrl, alt = imageAlt}
+            image = ImageData {url = imageUrl, alt = imageAlt},
+            description
           }
 
   let writerOpts = def {writerHighlightStyle = Just pygments} :: WriterOptions
