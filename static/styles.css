@@ -1,7 +1,7 @@
 html {
   background-color: #353b55;
   color: white;
-  font-family: sans-serif;
+  font-family: monospace;
 }
 
 body {
@@ -10,6 +10,57 @@ body {
   max-width: 800px;
 }
 
+header {
+  padding: 30px 0;
+}
+
+p {
+  line-height: 150%;
+}
+
+header a {
+  font-weight: bold;
+  color: white;
+  font-size: xxx-large;
+}
+
+.intro {
+  margin: 50px 0;
+}
+
 .blog-image {
   width: 100%;
+}
+
+.post-preview {
+  display: flex;
+  flex-direction: row;
+  margin: 20px 0;
+  gap: 20px;
+}
+
+.post-preview img {
+  width: 30%;
+  min-width: 30%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.post-preview .post-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-preview p {
+  margin: 10px 0 0 0;
+}
+
+.post-preview a {
+  font-weight: bold;
+  color: white;
+}
+
+.date-published {
+  opacity: 50%;
+  font-style: italic;
 }

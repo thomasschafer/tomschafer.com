@@ -1,4 +1,10 @@
-<div>
-  <img src="{% img_url %}" />
-  <a>{% title %}</a>
+<div class="post-preview">
+  <img src="{% imgUrl %}" alt="{% imgAlt %}" />
+
+  <div class="post-info">
+    <a href="{% postUrl %}">{% title %}</a>
+    <p class="date-published">{% pubDate %}</p>
+
+    <p>{% description %}</p>
+  </div>
 </div>
