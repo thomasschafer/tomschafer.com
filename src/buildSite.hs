@@ -1,4 +1,5 @@
 import Control.Monad (when)
+import Control.Monad.IO.Class (liftIO)
 import Data.Char (toLower)
 import Data.Map qualified as M
 import Data.Text (Text, pack, unpack)
@@ -74,7 +75,7 @@ renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
       -- TODO: single replace rather than list?
       let page =
             replaceWithList [Replace "{% posts %}" (pack $ concatMap renderPost blogPosts)] $
-              replaceWithList [Replace "{% body %}" content] $
+              replaceWithList [Replace "{% body %}" content, Replace "{% title %}" "Tom Schafer"] $
                 fromStrict pageTemplate
       -- TODO: render template strings here, using postPreviewTemplate
       TIO.writeFile (destDir </> path) (toStrict page)
@@ -129,13 +130,8 @@ data Frontmatter = Frontmatter
 
 processMarkdown :: Text -> IO (Frontmatter, Text)
 processMarkdown filePath = runIOorExplode $ do
-  let readerOpts =
-        def
-          { readerStandalone = True,
-            readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)
-          } ::
-          ReaderOptions
-  pandoc@(Pandoc (Meta meta) _) <- readMarkdown readerOpts filePath
+  let readerOpts = def {readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)}
+  result@(Pandoc (Meta meta) _) <- readMarkdown readerOpts filePath
 
   let maybeMetaToText = unpack . maybe "" stringify
   let title = maybeMetaToText $ M.lookup "title" meta
@@ -154,8 +150,9 @@ processMarkdown filePath = runIOorExplode $ do
             description
           }
 
-  let writerOpts = def {writerHighlightStyle = Just pygments} :: WriterOptions
-  res <- writeHtml5String writerOpts pandoc
+  let writerOpts = def {writerHighlightStyle = Just pygments}
+  res <- writeHtml5String writerOpts result
+  liftIO $ putStrLn $ unpack res
   return (metaData, res)
 
 clearDestDir :: FilePath -> IO ()

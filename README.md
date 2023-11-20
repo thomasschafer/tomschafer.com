@@ -8,7 +8,9 @@ Prerequisites:
 
 1. Install `ghc` (used for compiling Haskell), following the instructions [here](https://www.haskell.org/downloads/).
 
-To build, run `./build.sh`. This <TODO>
+To build:
+
+1. Run `./build.sh`. This <TODO>
 
 ## Deploying
 
@@ -16,6 +18,7 @@ To build, run `./build.sh`. This <TODO>
 
 ## TODOs:
 
-- Move files with Haskell
-- In index.html, iterate over posts add post-preview.html
-- Create page for each post
+- Render code correctly
+- Write a description and add links to GitHub etc.
+- Write posts
+- Deploy
