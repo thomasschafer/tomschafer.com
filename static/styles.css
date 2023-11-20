@@ -2,6 +2,7 @@ html {
   background-color: #353b55;
   color: white;
   font-family: monospace;
+  overflow-y: scroll;
 }
 
 body {
