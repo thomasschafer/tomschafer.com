@@ -7,6 +7,7 @@ My personal website, which can be viewed at [tomschafer.com](https://tomschafer.
 Prerequisites:
 
 1. Install `ghc` (used for compiling Haskell), following the instructions [here](https://www.haskell.org/downloads/).
+2. Install the `pandoc` CLI <TODO>
 
 To build:
 
