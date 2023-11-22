@@ -1,5 +1,4 @@
 import Control.Monad (when)
-import Control.Monad.IO.Class (liftIO)
 import Data.Char (toLower)
 import Data.List (sortBy)
 import Data.Map qualified as M
@@ -8,7 +7,6 @@ import Data.Text (Text, pack, unpack)
 import Data.Text.IO qualified as TIO
 import Data.Text.Lazy (fromStrict, toStrict)
 import Data.Text.Lazy qualified as Lazy
-import Debug.Trace (trace)
 import System.Directory
   ( copyFile,
     createDirectoryIfMissing,
@@ -19,21 +17,18 @@ import System.Directory
   )
 import System.Environment (getEnv)
 import System.FilePath (takeExtension, (</>))
-import System.Process (callCommand, readProcess)
+import System.Process (readProcess)
 import Text.Pandoc
   ( Extension (Ext_yaml_metadata_block),
     Meta (Meta),
     Pandoc (Pandoc),
-    ReaderOptions (readerExtensions, readerStandalone),
+    ReaderOptions (readerExtensions),
     def,
     enableExtension,
     readMarkdown,
     runIOorExplode,
-    writeHtml5String,
   )
 import Text.Pandoc.Definition (MetaValue (MetaMap))
-import Text.Pandoc.Highlighting (pygments)
-import Text.Pandoc.Options (WriterOptions, writerHighlightStyle)
 import Text.Pandoc.Shared (stringify)
 import Text.Replace (Replace (Replace), replaceWithList)
 
