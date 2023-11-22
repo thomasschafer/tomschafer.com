@@ -17,6 +17,7 @@ import System.Directory
     listDirectory,
     removeDirectoryRecursive,
   )
+import System.Environment (getEnv)
 import System.FilePath (takeExtension, (</>))
 import System.Process (callCommand, readProcess)
 import Text.Pandoc
@@ -75,12 +76,19 @@ renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
     renderAndCopy :: FilePath -> IO ()
     renderAndCopy path = do
       content <- TIO.readFile (srcDir </> path)
-      -- TODO: single replace rather than list?
-      let page =
-            replaceWithList [Replace "{% posts %}" (pack $ concatMap renderPost blogPosts)] $
-              replaceWithList [Replace "{% body %}" content, Replace "{% title %}" "Tom Schafer"] $
-                fromStrict pageTemplate
-      -- TODO: render template strings here, using postPreviewTemplate
+      let blogPostReplacements = [Replace "{% posts %}" (pack $ concatMap renderPost blogPosts)]
+      siteUrl <- getEnv "SITE_URL"
+      let pageReplacements =
+            [ Replace "{% body %}" content,
+              -- TODO: don't hardcode these in here
+              Replace "{% title %}" "Tom Schafer",
+              Replace "{% ogTitle %}" "Tom Schafer",
+              Replace "{% ogDesc %}" "My blog",
+              Replace "{% ogUrl %}" (pack siteUrl), -- TODO: check
+              Replace "{% ogType %}" "website",
+              Replace "{% ogImg %}" (pack $ siteUrl ++ "images/home-page.png") -- TODO: check
+            ]
+      let page = replaceWithList blogPostReplacements $ replaceWithList pageReplacements $ fromStrict pageTemplate
       TIO.writeFile (destDir </> path) (toStrict page)
 
 postFileName :: Frontmatter -> String
@@ -92,16 +100,22 @@ createPostPages blogPosts pageTemplate destDir =
   where
     createPostPage :: BlogPost -> IO ()
     createPostPage (_, frontmatter, content) = do
-      let postFilePath = destDir </> postFileName frontmatter
+      let postFilePath = postFileName frontmatter
+      siteUrl <- getEnv "SITE_URL"
       let textReplacements =
             [ Replace "{% content %}" content,
               Replace "{% title %}" (pack $ title frontmatter),
               Replace "{% pubDate %}" (pack $ pubDate frontmatter),
               Replace "{% imgUrl %}" (pack $ url $ image frontmatter),
-              Replace "{% imgAlt %}" (pack $ alt $ image frontmatter)
+              Replace "{% imgAlt %}" (pack $ alt $ image frontmatter),
+              Replace "{% ogTitle %}" (pack $ title frontmatter),
+              Replace "{% ogDesc %}" (pack $ description frontmatter),
+              Replace "{% ogUrl %}" (pack $ siteUrl ++ postFilePath), -- TODO: check
+              Replace "{% ogType %}" "article",
+              Replace "{% ogImg %}" (pack $ siteUrl ++ url (image frontmatter)) -- TODO: check
             ]
       let pageContent = replaceWithList textReplacements pageTemplate
-      TIO.writeFile postFilePath (toStrict pageContent)
+      TIO.writeFile (destDir </> postFilePath) (toStrict pageContent)
 
 isMarkdown :: FilePath -> Bool
 isMarkdown file = takeExtension file `elem` [".md", ".markdown"]
