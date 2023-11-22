@@ -1,7 +1,9 @@
 import Control.Monad (when)
 import Control.Monad.IO.Class (liftIO)
 import Data.Char (toLower)
+import Data.List (sortBy)
 import Data.Map qualified as M
+import Data.Ord (comparing)
 import Data.Text (Text, pack, unpack)
 import Data.Text.IO qualified as TIO
 import Data.Text.Lazy (fromStrict, toStrict)
@@ -103,18 +105,22 @@ createPostPages blogPosts pageTemplate destDir =
 isMarkdown :: FilePath -> Bool
 isMarkdown file = takeExtension file `elem` [".md", ".markdown"]
 
+sortPostsRevChron :: BlogPost -> BlogPost -> Ordering
+sortPostsRevChron = flip . comparing $ pubDate . (\(_, fm, _) -> fm)
+
 type BlogPost = (FilePath, Frontmatter, Text)
 
-loadMarkdownFiles :: String -> IO [BlogPost]
-loadMarkdownFiles dir = do
+loadBlogPosts :: String -> IO [BlogPost]
+loadBlogPosts dir = do
   allFiles <- listDirectory dir
   let mdFiles = filter isMarkdown allFiles
-  mapM processFile mdFiles
+  blogPosts <- mapM processFile mdFiles
+  return $ sortBy sortPostsRevChron blogPosts
   where
     processFile file = do
       let filePath = dir </> file
       fileContent <- TIO.readFile filePath
-      (metaData, content) <- processMarkdown fileContent
+      (metaData, content) <- processBlogPost fileContent
       return (file, metaData, content)
 
 data ImageData = ImageData {url :: String, alt :: String}
@@ -128,8 +134,8 @@ data Frontmatter = Frontmatter
   }
   deriving (Show)
 
-processMarkdown :: Text -> IO (Frontmatter, Text)
-processMarkdown filePath = runIOorExplode $ do
+processBlogPost :: Text -> IO (Frontmatter, Text)
+processBlogPost filePath = runIOorExplode $ do
   let readerOpts = def {readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)}
   result@(Pandoc (Meta meta) _) <- readMarkdown readerOpts filePath
 
@@ -162,7 +168,7 @@ clearDestDir destDir = do
 
 createPages :: FilePath -> IO ()
 createPages destDir = do
-  blogPosts <- loadMarkdownFiles "./blog_posts"
+  blogPosts <- loadBlogPosts "./blog_posts"
   pageTemplate <- TIO.readFile "src/templates/page.html"
   postPreviewTemplate <- TIO.readFile "src/templates/post-preview.html"
   partialPostTemplate <- TIO.readFile "src/templates/post.html"

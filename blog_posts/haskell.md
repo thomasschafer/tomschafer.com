@@ -1,8 +1,8 @@
 ---
-title: "Post 2"
-pubDate: 2023-11-13
+title: "Point-free programming"
+pubDate: 2023-11-15
 image:
-  url: images/Haskell.png
+  url: images/haskell.png
   alt: Lines of light flowing through a starry sky with snippets of code scattered across the image.
 description: Lorem 2 ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 ---
