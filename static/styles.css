@@ -1,6 +1,6 @@
 :root {
-  --bg-from: #1e2235;
-  --bg-to: #5E548E;
+  --bg-dark: #1e2235;
+  --bg-med: #5E548E;
 }
 
 html {
@@ -15,8 +15,8 @@ body {
   overflow-y: scroll;
   margin: 0;
   padding: 0;
-  background: var(--bg-from);
-  background-image: linear-gradient(135deg, var(--bg-from), var(--bg-to));
+  background: var(--bg-dark);
+  background-image: linear-gradient(135deg, var(--bg-med), var(--bg-dark));
   background-attachment: fixed;
   margin: auto;
   padding: 20px 40px;
@@ -42,6 +42,52 @@ header a {
   margin: 50px 0;
 }
 
+.links {
+  margin: 50px 0;
+}
+
+.links p {
+  display: flex;
+}
+
+.links a {
+  color: white;
+  margin: auto 0;
+}
+
+.links ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.links li {
+  display: flex;
+  margin: 12px 0;
+  cursor: pointer;
+}
+
+.links .image-background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  margin-right: 10px;
+  width: 25px;
+  height: 25px;
+}
+
+.links .linkedin-icon {
+  border-radius: 4px;
+}
+
+.links .github-icon {
+  border-radius: 50%;
+}
+
+.links img {
+  width: 20px;
+}
+
 .blog-image {
   width: 100%;
 }
@@ -49,7 +95,7 @@ header a {
 .post-preview {
   display: flex;
   flex-direction: row;
-  background: var(--bg-from);
+  background: var(--bg-dark);
   margin: 20px 0;
   padding: 10px;
   border-radius: 4px;
