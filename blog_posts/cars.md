@@ -1,8 +1,8 @@
 ---
-title: "Post 1"
-pubDate: 2023-11-12
+title: "The death of the automobile"
+pubDate: 2023-11-14
 image:
-  url: images/Cars.png
+  url: images/cars.png
   alt: A huge highway being constructed, cutting through a leafy green suburb.
 description: Lorem 2 ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 ---
