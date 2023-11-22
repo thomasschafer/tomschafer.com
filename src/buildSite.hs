@@ -18,6 +18,7 @@ import System.Directory
     removeDirectoryRecursive,
   )
 import System.FilePath (takeExtension, (</>))
+import System.Process (callCommand, readProcess)
 import Text.Pandoc
   ( Extension (Ext_yaml_metadata_block),
     Meta (Meta),
@@ -119,8 +120,7 @@ loadBlogPosts dir = do
   where
     processFile file = do
       let filePath = dir </> file
-      fileContent <- TIO.readFile filePath
-      (metaData, content) <- processBlogPost fileContent
+      (metaData, content) <- processBlogPost filePath
       return (file, metaData, content)
 
 data ImageData = ImageData {url :: String, alt :: String}
@@ -134,32 +134,36 @@ data Frontmatter = Frontmatter
   }
   deriving (Show)
 
-processBlogPost :: Text -> IO (Frontmatter, Text)
-processBlogPost filePath = runIOorExplode $ do
-  let readerOpts = def {readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)}
-  result@(Pandoc (Meta meta) _) <- readMarkdown readerOpts filePath
+processBlogPost :: String -> IO (Frontmatter, Text)
+processBlogPost blogPostPath = do
+  blogPostContent <- TIO.readFile blogPostPath
+  metaData <- runIOorExplode $ do
+    let readerOpts = def {readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)}
+    (Pandoc (Meta meta) _) <- readMarkdown readerOpts blogPostContent
 
-  let maybeMetaToText = unpack . maybe "" stringify
-  let title = maybeMetaToText $ M.lookup "title" meta
-  let pubDate = maybeMetaToText $ M.lookup "pubDate" meta
-  let description = maybeMetaToText $ M.lookup "description" meta
-  let imageMeta = case M.lookup "image" meta of
-        Just (MetaMap m) -> m
-        _ -> M.empty
-  let imageUrl = maybeMetaToText $ M.lookup "url" imageMeta
-  let imageAlt = maybeMetaToText $ M.lookup "alt" imageMeta
-  let metaData =
-        Frontmatter
-          { title,
-            pubDate,
-            image = ImageData {url = imageUrl, alt = imageAlt},
-            description
-          }
+    let maybeMetaToText = unpack . maybe "" stringify
+    let title = maybeMetaToText $ M.lookup "title" meta
+    let pubDate = maybeMetaToText $ M.lookup "pubDate" meta
+    let description = maybeMetaToText $ M.lookup "description" meta
+    let imageMeta = case M.lookup "image" meta of
+          Just (MetaMap m) -> m
+          _ -> M.empty
+    let imageUrl = maybeMetaToText $ M.lookup "url" imageMeta
+    let imageAlt = maybeMetaToText $ M.lookup "alt" imageMeta
+    let metaData =
+          Frontmatter
+            { title,
+              pubDate,
+              image = ImageData {url = imageUrl, alt = imageAlt},
+              description
+            }
+    return metaData
 
-  let writerOpts = def {writerHighlightStyle = Just pygments}
-  res <- writeHtml5String writerOpts result
-  liftIO $ putStrLn $ unpack res
-  return (metaData, res)
+  -- I'd rather use the pandoc Haskell library directly here, rather than invoking it from the
+  -- command line, but for some reason I can't get code to be nicely formatted using the library -
+  -- the CLI works fine though, strangely
+  res <- readProcess "pandoc" [blogPostPath] ""
+  return (metaData, pack res)
 
 clearDestDir :: FilePath -> IO ()
 clearDestDir destDir = do

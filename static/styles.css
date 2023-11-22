@@ -19,7 +19,7 @@ body {
   background-image: linear-gradient(135deg, var(--bg-med), var(--bg-dark));
   background-attachment: fixed;
   margin: auto;
-  padding: 20px 40px;
+  padding: 20px 40px 50px 40px;
   max-width: 800px;
 }
 
@@ -50,20 +50,21 @@ header a {
   display: flex;
 }
 
-.links a {
-  color: white;
-  margin: auto 0;
-}
-
 .links ul {
   list-style-type: none;
-  padding: 0;
+  padding: 0 4px 0 0;
+  width: fit-content;
 }
 
 .links li {
   display: flex;
   margin: 12px 0;
   cursor: pointer;
+}
+
+.links li a {
+  color: white;
+  margin: auto 0;
 }
 
 .links .image-background {
@@ -90,6 +91,7 @@ header a {
 
 .blog-image {
   width: 100%;
+  border-radius: 8px;
 }
 
 .post-preview {
@@ -101,6 +103,13 @@ header a {
   border-radius: 4px;
   gap: 20px;
   cursor: pointer;
+  position: relative;
+  top: 0;
+  transition: top ease 0.1s;
+}
+
+.post-preview:hover {
+  top: -4px;
 }
 
 .post-preview img {
