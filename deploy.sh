@@ -6,8 +6,6 @@ set -e
 
 echo "Deploying..."
 
-export $(cat .env | xargs)
-
-netlify deploy --site $SITE_NAME --dir ./out --prod
+netlify deploy --site $ NETLIFY_SITE_NAME --dir ./out --prod
 
 echo "Deployment complete"
