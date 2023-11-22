@@ -4,22 +4,22 @@ My personal website, which can be viewed at [tomschafer.com](https://tomschafer.
 
 ## Building
 
-Prerequisites:
+Pre-requisites:
 
-1. Install `ghc` (used for compiling Haskell), following the instructions [here](https://www.haskell.org/downloads/).
-2. Install the `pandoc` CLI <TODO>
+1. Install `ghc`, used for compiling Haskell (see [here](https://www.haskell.org/downloads/))
+1. Install the `pandoc` CLI (see [here](https://github.com/jgm/pandoc))
 
 To build:
 
-1. Run `./build.sh`. This <TODO>
+1. Run `./build.sh`
 
 ## Deploying
 
-1. <TODO>
+Pre-requisites:
 
-## TODOs:
+1. Install the Netlify CLI (see [here](https://docs.netlify.com/cli/get-started/#installation))
+1. Make a copy of `.env.template` called `.env`, and add values where required
 
-- Render code correctly
-- Write a description and add links to GitHub etc.
-- Write posts
-- Deploy
+To deploy:
+
+1. Run `./deploy.sh` (note that this also runs the build script before deploying)
