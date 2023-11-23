@@ -17,16 +17,15 @@ import System.Directory
   )
 import System.Environment (getEnv)
 import System.FilePath (takeExtension, (</>))
-import System.Process (readProcess)
 import Text.Pandoc
-  ( Extension (Ext_yaml_metadata_block),
-    Meta (Meta),
+  ( Meta (Meta),
     Pandoc (Pandoc),
     ReaderOptions (readerExtensions),
     def,
-    enableExtension,
+    pandocExtensions,
     readMarkdown,
     runIOorExplode,
+    writeHtml5String,
   )
 import Text.Pandoc.Definition (MetaValue (MetaMap))
 import Text.Pandoc.Shared (stringify)
@@ -146,9 +145,9 @@ data Frontmatter = Frontmatter
 processBlogPost :: String -> IO (Frontmatter, Text)
 processBlogPost blogPostPath = do
   blogPostContent <- TIO.readFile blogPostPath
-  metaData <- runIOorExplode $ do
-    let readerOpts = def {readerExtensions = enableExtension Ext_yaml_metadata_block (readerExtensions def)}
-    (Pandoc (Meta meta) _) <- readMarkdown readerOpts blogPostContent
+  runIOorExplode $ do
+    let readerOpts = def {readerExtensions = pandocExtensions}
+    content@(Pandoc (Meta meta) _) <- readMarkdown readerOpts blogPostContent
 
     let maybeMetaToText = unpack . maybe "" stringify
     let title = maybeMetaToText $ M.lookup "title" meta
@@ -166,13 +165,8 @@ processBlogPost blogPostPath = do
               image = ImageData {url = imageUrl, alt = imageAlt},
               description
             }
-    return metaData
-
-  -- I'd rather use the pandoc Haskell library directly here, rather than invoking it from the
-  -- command line, but for some reason I can't get code to be nicely formatted using the library -
-  -- the CLI works fine though, strangely
-  res <- readProcess "pandoc" [blogPostPath] ""
-  return (metaData, pack res)
+    result <- writeHtml5String def content
+    return (metaData, result)
 
 clearDestDir :: FilePath -> IO ()
 clearDestDir destDir = do
