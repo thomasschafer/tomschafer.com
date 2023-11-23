@@ -79,9 +79,9 @@ renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
               Replace "{% title %}" "Tom Schafer",
               Replace "{% ogTitle %}" "Tom Schafer",
               Replace "{% ogDesc %}" "My blog",
-              Replace "{% ogUrl %}" (pack siteUrl), -- TODO: check
+              Replace "{% ogUrl %}" (pack siteUrl),
               Replace "{% ogType %}" "website",
-              Replace "{% ogImg %}" (pack $ siteUrl ++ "images/home-page.png") -- TODO: check
+              Replace "{% ogImg %}" (pack $ siteUrl ++ "images/home-page.png")
             ]
       let page = replaceWithList blogPostReplacements $ replaceWithList pageReplacements $ fromStrict pageTemplate
       TIO.writeFile (destDir </> path) (toStrict page)
@@ -105,9 +105,9 @@ createPostPages blogPosts pageTemplate destDir =
               Replace "{% imgAlt %}" (pack $ alt $ image frontmatter),
               Replace "{% ogTitle %}" (pack $ title frontmatter),
               Replace "{% ogDesc %}" (pack $ description frontmatter),
-              Replace "{% ogUrl %}" (pack $ siteUrl ++ postFilePath), -- TODO: check
+              Replace "{% ogUrl %}" (pack $ siteUrl ++ postFilePath),
               Replace "{% ogType %}" "article",
-              Replace "{% ogImg %}" (pack $ siteUrl ++ url (image frontmatter)) -- TODO: check
+              Replace "{% ogImg %}" (pack $ siteUrl ++ url (image frontmatter))
             ]
       let pageContent = replaceWithList textReplacements pageTemplate
       TIO.writeFile (destDir </> postFilePath) (toStrict pageContent)
