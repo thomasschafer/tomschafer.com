@@ -21,6 +21,6 @@ To me, the probability of an event can be thought of as the odds I'd want were I
 
 Suppose you were among those approached. Which would you choose?
 
-I would choose tails every time, and I think most rational people would too. Indeed, if this experiment was repeated 10 times and all participants followed this logic, we'd expect that 5000 of them would be better off and only 5 would leave with nothing. Given the chance, I'd take the money rather than arguing over semantics.
+I would choose tails every time, and I think most rational people would too. Indeed, if this experiment was repeated 10 times and all participants followed this logic, we'd expect that 5000 of them would be better off and only 5 would leave with nothing, with the entire group becoming wealthier in total provided that they accepted odds of at least 1:1000 (that is, odds ensuring that a wager of £10 would yield at least a penny in winnings if correct, and the forfeit of the entire £10 wager if incorrect). Translated back to the original problem, Sleeping Beauty would be better off choosing tails and should be willing to bet on this fact with odds of at least 1:2.
 
-As any good mathematician would say, QED.
+Given the chance, I'd take the money rather than arguing over semantics. As any good mathematician would say, QED.
