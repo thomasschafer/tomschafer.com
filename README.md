@@ -7,6 +7,7 @@ My personal website, which can be viewed at [tomschafer.com](https://tomschafer.
 Pre-requisites:
 
 1. Install `ghc`, used for compiling Haskell (see [here](https://www.haskell.org/downloads/))
+1. Install `sass`, used for transpiling `.scss` files to `.css` (see [here](https://sass-lang.com/install/))
 1. Make a copy of `.env.template` called `.env`, and add values to the `Build` section
 
 To build:
