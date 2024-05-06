@@ -46,7 +46,7 @@ panic: runtime error: invalid memory address or nil pointer dereference
 
 This is the type of problem that a good type system can completely solve for us (see Haskell and Rust, amongst other languages).
 
-Next up, suppose you want to want to perform a fairly simple task: make a network request and parse the returned JSON. We're going to use `https://jsonplaceholder.typicode.com/todos/:id` for this purpose, which returns a simple response like the following:
+Next up, suppose you want to perform a fairly simple task: make a network request and parse the returned JSON. We're going to use `https://jsonplaceholder.typicode.com/todos/:id` for this purpose, which returns a simple response like the following:
 
 ```bash
 $ curl https://jsonplaceholder.typicode.com/todos/1
@@ -176,7 +176,7 @@ There are a number of other changes I would make to Go given the choice, such as
 
 While the examples given for Go are largely related to the type system, Ruby is a dynamically typed language, which means that the types of variables no longer resides in the compiler and instead reside in the heads of the three developers who built the application and have since moved to your company's competitors for a substantially larger compensation package. For this reason I won't dwell on the benefits that a good type system would bring the language, and in fact there is actually a rather nice type system for Ruby called [Sorbet](https://sorbet.org/), which is optional but makes working with Ruby much more enjoyable.
 
-The primary issue I have with Ruby is that it can be surprisingly difficult to jump in to with no prior knowledge of the language. Most languages such as Go, Python and C are sufficiently similar that most programmers can skim a piece of code and work out what is going on. With Ruby, this is less true. Consider the following (taken from the [Ruby on Rails](https://github.com/rails/rails/blob/f6fd15cb7563740ba3896207ed28e1308301d9dc/activerecord/lib/active_record/insert_all.rb#L282-L290) source code):
+The primary issue I have with Ruby is that it can be surprisingly difficult to jump in to with no prior knowledge of the language. Most languages such as Go, Python and C are sufficiently similar that the average programmer can skim a piece of code and work out what is going on. With Ruby, this is less true. Consider the following (taken from the [Ruby on Rails](https://github.com/rails/rails/blob/f6fd15cb7563740ba3896207ed28e1308301d9dc/activerecord/lib/active_record/insert_all.rb#L282-L290) source code):
 
 ```ruby
 def touch_model_timestamps_unless(&block)
@@ -192,11 +192,21 @@ end
 
 One of the first things you might notice is the `return` on the first line. That's strange, a programmer with no experience in Ruby might think - we're immediately returning without an `if` statement? What is the point in the rest of the function? Of course, this is still a conditional return, but the boolean is placed at the end of the line.
 
-This conditional is also placed after the `unless` keyword, which is identical to _if not_ but with the benefit that an engineer whose Ruby is not fluent will have to expend a non-trivial number of brain cycles adding the negation in their head. With post-fix `if` or `unless`, you first see _what_ will happen, and are left guessing _why_ this will happen until the end of the line. There is a joke about the German language and waiting for the verb, and I'm sure there is a similar pun to be made about Ruby programmers enduring a nail-biting wait for the conditional.
+This conditional is also placed after the `unless` keyword, which is identical to _if not_ but with the benefit that an engineer whose Ruby is not fluent will have to expend a non-trivial number of brain cycles applying the negation in their head. With post-fix `if` or `unless`, you first see _what_ will happen, and are left guessing _why_ this will happen until the end of the line. There is a joke about the German language and waiting for the verb, and I'm sure there is a similar pun to be made about Ruby programmers enduring a nail-biting wait for the conditional.
 
-My final gripe with the snippet above is the implicit method calls. From glancing at the code above, you may assume that `update_duplicates?` and `record_timestamps?` are variables defined somewhere. They might be, but there are a plethora of other possibilities, and the answer can only be determined by digging further through the code (or, thanks to the joys of [monkey patching](https://shopify.engineering/the-case-against-monkey-patching), by running it). Indeed, they may be class, module or instance variables, but in this case they are actually methods defined on the class itself. Where are the brackets? Here is the stroke of genius from the designers of Ruby: _you don't need brackets to call a function_. This is genius because it makes the Ruby programmer feel like they are writing cleaner code, while simultaneously making it almost incomprehensible to everyone else.
+My final gripe with the snippet above is the implicit method calls. From glancing at the code above, you may assume that `update_duplicates?` and `record_timestamps?` are variables defined somewhere. They might be, but there are a plethora of other possibilities, and the answer can only be determined by digging further through the code (or, thanks to the joys of [monkey patching](https://shopify.engineering/the-case-against-monkey-patching), by running it). Indeed, they may be class, module or instance variables, but in this case they are actually methods defined on the class itself. Where are the brackets? Here is the stroke of genius from the designers of Ruby: _you don't need brackets to call a function_. This is genius because it makes the Ruby programmer feel like they are writing cleaner code, while simultaneously making it almost incomprehensible to everyone else, ensuring strong career stability for those well-versed in the language.
 
-It also means that you can't pass in a function to another function as you might expect to, as the function will be called when you try and pass it in. Take the following example;
+
+In Python, the `return "" unless ...` line would be written more like the following:
+
+```python
+if update_duplicates() and record_timestamps():
+  return ""
+```
+
+While there may be no such thing as objectively readable code, I think that the Python example is more clear to the average programmer making a quick change to a foreign service, or a bleary-eyed on-call engineer trying to work out why the application pods running Ruby are crashing with `undefined local variable or method 'record_timestamps' for main:Object (NameError)` at 3 in the morning.
+
+As an aside, implicit function calling means that you can't pass in a function to another function as you might expect to, as the function will be called when you try and pass it in. Take the following example;
 
 ```ruby
 def call_with_1(func)
@@ -218,15 +228,6 @@ If you wrote the above in most other languages and then called `call_with_1(bar)
         from /Users/tschafer/.rbenv/versions/3.2.2/bin/irb:25:in `<main>'
 ```
 
-Of course, this can be worked around with blocks, procs or lambdas, but to me this seems like unnecessary complexity for no real gain.
+Of course, this can be worked around with blocks, procs or lambdas, but to me this seems like unnecessary complexity for no real gain. This sums up my experience with Ruby: the idioms discussed are easy to understand given a modicum of Ruby knowledge, but I think there is value to a language being understandable to the average programmer, and Ruby's quirks often provide substantial downside with marginal upside.
 
-The idioms discussed above are easy to understand given a modicum of Ruby knowledge, but I think there is value to a language being understandable to the average programmer: it is not uncommon for a company to own a number of services written in a variety of languages, and an engineer might need to make a quick change to a service that they don't routinely interact with, and for those without prior experience Ruby can be troublesome in such circumstances.
-
-In Python, this would be written more like the following:
-
-```python
-if update_duplicates() and record_timestamps():
-  return ""
-```
-
-While there may be no such thing as objectively readable code, I think that the Python example is more clear to the average programmer making a quick change to a foreign service, or a bleary-eyed on-call engineer trying to work out why the application pods running Ruby are crashing with `undefined local variable or method 'record_timestamps' for main:Object (NameError)` at 3 in the morning.
+To its credit, some of the most profitable technology companies in the world were built using (and still use) Ruby, so you can take comfort in strong career prospects while you bang your head on your desk trying to work out why your app is so slow.
