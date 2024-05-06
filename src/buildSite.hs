@@ -52,38 +52,38 @@ renderPages :: [BlogPost] -> Text -> Text -> FilePath -> FilePath -> IO ()
 renderPages blogPosts pageTemplate postPreviewTemplate srcDir destDir = do
   pages <- listDirectory srcDir
   mapM_ renderAndCopy pages
-  where
-    renderPost :: BlogPost -> String
-    renderPost (_, frontmatter, _) =
-      unpack . toStrict $
-        replaceWithList replacements (fromStrict postPreviewTemplate)
-      where
-        replacements =
-          [ Replace "{% imgUrl %}" (pack $ url $ image frontmatter),
-            Replace "{% imgAlt %}" (pack $ alt $ image frontmatter),
-            Replace "{% title %}" (pack $ title frontmatter),
-            Replace "{% pubDate %}" (pack $ pubDate frontmatter),
-            Replace "{% description %}" (pack $ description frontmatter),
-            Replace "{% postUrl %}" (pack $ postFileName frontmatter)
-          ]
+ where
+  renderPost :: BlogPost -> String
+  renderPost (_, frontmatter, _) =
+    unpack . toStrict $
+      replaceWithList replacements (fromStrict postPreviewTemplate)
+   where
+    replacements =
+      [ Replace "{% imgUrl %}" (pack $ url $ image frontmatter)
+      , Replace "{% imgAlt %}" (pack $ alt $ image frontmatter)
+      , Replace "{% title %}" (pack $ title frontmatter)
+      , Replace "{% pubDate %}" (pack $ pubDate frontmatter)
+      , Replace "{% description %}" (pack $ description frontmatter)
+      , Replace "{% postUrl %}" (pack $ postFileName frontmatter)
+      ]
 
-    renderAndCopy :: FilePath -> IO ()
-    renderAndCopy path = do
-      content <- TIO.readFile (srcDir </> path)
-      let blogPostReplacements = [Replace "{% posts %}" (pack $ concatMap renderPost blogPosts)]
-      siteUrl <- getEnv "SITE_URL"
-      let pageReplacements =
-            [ Replace "{% body %}" content,
-              -- TODO: don't hardcode these in here
-              Replace "{% title %}" "Tom Schafer",
-              Replace "{% ogTitle %}" "Tom Schafer",
-              Replace "{% ogDesc %}" "My blog",
-              Replace "{% ogUrl %}" (pack siteUrl),
-              Replace "{% ogType %}" "website",
-              Replace "{% ogImg %}" (pack $ siteUrl ++ "images/home-page.png")
-            ]
-      let page = replaceWithList blogPostReplacements $ replaceWithList pageReplacements $ fromStrict pageTemplate
-      TIO.writeFile (destDir </> path) (toStrict page)
+  renderAndCopy :: FilePath -> IO ()
+  renderAndCopy path = do
+    content <- TIO.readFile (srcDir </> path)
+    let blogPostReplacements = [Replace "{% posts %}" (pack $ concatMap renderPost blogPosts)]
+    siteUrl <- getEnv "SITE_URL"
+    let pageReplacements =
+          [ Replace "{% body %}" content
+          , -- TODO: don't hardcode these in here
+            Replace "{% title %}" "Tom Schafer"
+          , Replace "{% ogTitle %}" "Tom Schafer"
+          , Replace "{% ogDesc %}" "My blog"
+          , Replace "{% ogUrl %}" (pack siteUrl)
+          , Replace "{% ogType %}" "website"
+          , Replace "{% ogImg %}" (pack $ siteUrl ++ "images/home-page.png")
+          ]
+    let page = replaceWithList blogPostReplacements $ replaceWithList pageReplacements $ fromStrict pageTemplate
+    TIO.writeFile (destDir </> path) (toStrict page)
 
 postFileName :: Frontmatter -> String
 postFileName = (++ ".html") . map (\c -> if c == ' ' then '-' else toLower c) . title
@@ -91,25 +91,25 @@ postFileName = (++ ".html") . map (\c -> if c == ' ' then '-' else toLower c) . 
 createPostPages :: [BlogPost] -> Lazy.Text -> FilePath -> IO ()
 createPostPages blogPosts pageTemplate destDir =
   mapM_ createPostPage blogPosts
-  where
-    createPostPage :: BlogPost -> IO ()
-    createPostPage (_, frontmatter, content) = do
-      let postFilePath = postFileName frontmatter
-      siteUrl <- getEnv "SITE_URL"
-      let textReplacements =
-            [ Replace "{% content %}" content,
-              Replace "{% title %}" (pack $ title frontmatter),
-              Replace "{% pubDate %}" (pack $ pubDate frontmatter),
-              Replace "{% imgUrl %}" (pack $ url $ image frontmatter),
-              Replace "{% imgAlt %}" (pack $ alt $ image frontmatter),
-              Replace "{% ogTitle %}" (pack $ title frontmatter),
-              Replace "{% ogDesc %}" (pack $ description frontmatter),
-              Replace "{% ogUrl %}" (pack $ siteUrl ++ postFilePath),
-              Replace "{% ogType %}" "article",
-              Replace "{% ogImg %}" (pack $ siteUrl ++ url (image frontmatter))
-            ]
-      let pageContent = replaceWithList textReplacements pageTemplate
-      TIO.writeFile (destDir </> postFilePath) (toStrict pageContent)
+ where
+  createPostPage :: BlogPost -> IO ()
+  createPostPage (_, frontmatter, content) = do
+    let postFilePath = postFileName frontmatter
+    siteUrl <- getEnv "SITE_URL"
+    let textReplacements =
+          [ Replace "{% content %}" content
+          , Replace "{% title %}" (pack $ title frontmatter)
+          , Replace "{% pubDate %}" (pack $ pubDate frontmatter)
+          , Replace "{% imgUrl %}" (pack $ url $ image frontmatter)
+          , Replace "{% imgAlt %}" (pack $ alt $ image frontmatter)
+          , Replace "{% ogTitle %}" (pack $ title frontmatter)
+          , Replace "{% ogDesc %}" (pack $ description frontmatter)
+          , Replace "{% ogUrl %}" (pack $ siteUrl ++ postFilePath)
+          , Replace "{% ogType %}" "article"
+          , Replace "{% ogImg %}" (pack $ siteUrl ++ url (image frontmatter))
+          ]
+    let pageContent = replaceWithList textReplacements pageTemplate
+    TIO.writeFile (destDir </> postFilePath) (toStrict pageContent)
 
 isMarkdown :: FilePath -> Bool
 isMarkdown file = takeExtension file `elem` [".md", ".markdown"]
@@ -125,34 +125,37 @@ loadBlogPosts dir = do
   let mdFiles = filter isMarkdown allFiles
   blogPosts <- mapM processFile mdFiles
   return $ sortBy sortPostsRevChron blogPosts
-  where
-    processFile file = do
-      let filePath = dir </> file
-      (metaData, content) <- processBlogPost filePath
-      return (file, metaData, content)
+ where
+  processFile file = do
+    let filePath = dir </> file
+    (metaData, content) <- processBlogPost filePath
+    return (file, metaData, content)
 
 data ImageData = ImageData {url :: String, alt :: String}
   deriving (Show)
 
 data Frontmatter = Frontmatter
-  { title :: String,
-    pubDate :: String,
-    image :: ImageData,
-    description :: String
+  { title :: String
+  , pubDate :: String
+  , image :: ImageData
+  , description :: String
   }
   deriving (Show)
 
 updateBlogPostHtml :: Text -> Text
 updateBlogPostHtml =
   toStrict
-  . replaceWithList [Replace "<a href" "<a target=”_blank” href"]
-  . fromStrict
+    . replaceWithList
+      [ Replace "<a href=\"http" "<a target=\"_blank\" href=\"http"
+      , Replace "<a\nhref=\"http" "<a target=\"_blank\" href=\"http"
+      ]
+    . fromStrict
 
 processBlogPost :: String -> IO (Frontmatter, Text)
 processBlogPost blogPostPath = do
   blogPostContent <- TIO.readFile blogPostPath
   runIOorExplode $ do
-    let readerOpts = def {readerExtensions = pandocExtensions}
+    let readerOpts = def{readerExtensions = pandocExtensions}
     content@(Pandoc (Meta meta) _) <- readMarkdown readerOpts blogPostContent
 
     let maybeMetaToText = unpack . maybe "" stringify
@@ -166,10 +169,10 @@ processBlogPost blogPostPath = do
     let imageAlt = maybeMetaToText $ M.lookup "alt" imageMeta
     let metaData =
           Frontmatter
-            { title,
-              pubDate,
-              image = ImageData {url = imageUrl, alt = imageAlt},
-              description
+            { title
+            , pubDate
+            , image = ImageData{url = imageUrl, alt = imageAlt}
+            , description
             }
     result <- writeHtml5String def content
     return (metaData, updateBlogPostHtml result)
