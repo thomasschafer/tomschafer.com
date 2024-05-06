@@ -1,25 +1,25 @@
 ---
-title: "Bad languages"
+title: "Bad programming languages"
 pubDate: 2024-05-05
 image:
   url: images/coding-in-coffee-shop.png
   alt: A young woman coding in a coffee shop
-description: TODO
+description: Some argue that there is no objective truth - only subjective beliefs. I will ignore this entirely and discuss the shortcomings of some languages I've used.
 ---
 
 Bertrand Russell said
 
-> *Language serves not only to express thought, but to make possible thoughts which could not exist without it.*
+> _Language serves not only to express thought, but to make possible thoughts which could not exist without it._
 
-While this was intended to describe the kind of languages we converse in, I think this applies equally to programming languages. A good programming language can help us develop and express (and make a machine execute) novel ideas elegantly and simply. A bad language does the opposite, constraining our thoughts, bounding our creativity and tiring our fingers as we perform yet another null pointer check.
+While this was intended to describe the kind of languages we converse in, I think this applies equally to programming languages. A good programming language can help us develop and express (and make a machine execute) novel ideas elegantly and simply, guiding us down paths we may otherwise not have traveled. A bad language does the opposite, constraining our thoughts, bounding our creativity and tiring our fingers as we perform yet another null pointer check.
 
-To demonstrate this, I'm going to talk about a couple of languages I've worked with - in particular, Go and Ruby - and some issues I've encountered with them. This post makes no assertions about the objective merits of these languages: a language can be wonderfully productive in spite of its quirks. Indeed, while languages such as Haskell allow for the creation of beautiful abstrations to express complex transformations of data, there is no doubt that it cannot match Go and Ruby for expressing the idea of actually making money for a business.
+To demonstrate this, I'm going to talk about a couple of languages I've worked with - in particular, Go and Ruby - and some issues I've encountered with them. This post makes no assertions about the objective merits of these languages: a language can be wonderfully productive in spite of its quirks. Indeed, while languages such as Haskell allow for the creation of beautiful abstractions to express complex transformations of data, there is no doubt that it cannot match Go and Ruby for expressing the idea of actually making money for a business.
 
 # Go
 
 Go is elegantly summed up by one of its creators, Rob Pike, as follows:
 
-> *Our programmers are Googlers, they’re not researchers. They’re typically, fairly young, fresh out of school, probably learned Java, maybe learned C or C++, probably learned Python. They’re not capable of understanding a brilliant language but we want to use them to build good software. So, the language that we give them has to be easy for them to understand and easy to adopt.*
+> _Our programmers are Googlers, they’re not researchers. They’re typically, fairly young, fresh out of school, probably learned Java, maybe learned C or C++, probably learned Python. They’re not capable of understanding a brilliant language but we want to use them to build good software. So, the language that we give them has to be easy for them to understand and easy to adopt._
 
 This seems to be particularly condescending to Google employees, so perhaps it was with this in mind that he strapped an explosive to the underside of many data types routinely used in Go, to ensure that programmers are still forced to use some small part of their brain. I am, of course, talking about nil pointers here. If a variable in Haskell might be nil, the type checker will force you to handle this possibility:
 
@@ -130,7 +130,7 @@ $ go run test.go https://jsonplaceholder.typicode.com/todos/4
 Todo: {UserID:1 ID:4 Title:et porro tempora Completed:false}
 ```
 
-Oh dear - the value of `completed` in the request was `true`, but our code is showing `false`. Why is that? Well, if you look closely, you'll notice a small typo: we wrote `json:"complete"`, when in fact we want `json:"completed"`. Rather than shouting at us about our mistake when the request is parsed, Go simply ignores this silently.
+Oh dear - the value of `completed` in the request was `true`, but our code is showing `false`. Why is that? Well, if you look closely, you'll notice a small typo: we wrote `json:"complete"`, when in fact we want `json:"completed"`. Rather than berating us for our mistake when the request is parsed, Go silently ignores this.
 
 Of course, it isn't hard to add our own validation, but I think good defaults are important, and Go defaults to handing you the gun and aiming it at your foot, allowing you to pull the trigger at your leisure (or at 3 in the morning, if you're on call).
 
@@ -167,22 +167,66 @@ if val, ok := m["b"]; !ok {
 }
 ```
 
-Adding this boilerplate isn't so bad once you learn about this particular gotcha, but Go provides such an expansive menu of similar gotchas that it takes some time before they are all seared into one's brain.
+Adding this boilerplate isn't so bad once you learn about this particular behaviour, but Go provides such an expansive menu of similar gotchas that it takes some time before they are all seared into one's brain.
 
 There are a number of other changes I would make to Go given the choice, such as adding union types or immutable variables (distinct from the compile-time constants that Go provides), but I won't dive in to these further to save this post from turning too far into a functional programming pitch.
-
-### Notes
-
-No sum types (like T.any in Sorbet, union types in TypeScript etc.)
-
-No immutable variables (i.e. being able to say a variable is constant, even if you don't know it's value at compile time - Go's const only works for compile-time constants)
 
 
 # Ruby
 
-While the examples given for Go are largely related to the type system, Ruby is a dynamically typed language, which means that the types of variables no longer resides in the compiler and instead reside in the heads of the three developers who built the application and have since moved to your company's competitors for a substantially larger compensation package. For this reason I won't dwell on the benefits that a good type system would bring the language, and note that there is actually a fairly nice type system for Ruby called [Sorbet](https://sorbet.org/), which makes working with Ruby much more enjoyable.
+While the examples given for Go are largely related to the type system, Ruby is a dynamically typed language, which means that the types of variables no longer resides in the compiler and instead reside in the heads of the three developers who built the application and have since moved to your company's competitors for a substantially larger compensation package. For this reason I won't dwell on the benefits that a good type system would bring the language, and in fact there is actually a rather nice type system for Ruby called [Sorbet](https://sorbet.org/), which is optional but makes working with Ruby much more enjoyable.
 
-### Notes
-Wait for conditional (foo if bar - German language joke)
+The primary issue I have with Ruby is that it can be surprisingly difficult to jump in to with no prior knowledge of the language. Most languages such as Go, Python and C are sufficiently similar that most programmers can skim a piece of code and work out what is going on. With Ruby, this is less true. Consider the following (taken from the [Ruby on Rails](https://github.com/rails/rails/blob/f6fd15cb7563740ba3896207ed28e1308301d9dc/activerecord/lib/active_record/insert_all.rb#L282-L290) source code):
 
-Implicit function calls (or, as Rubyists would declare, optional parentheses)
+```ruby
+def touch_model_timestamps_unless(&block)
+  return "" unless update_duplicates? && record_timestamps?
+
+  model.timestamp_attributes_for_update_in_model.filter_map do |column_name|
+    if touch_timestamp_attribute?(column_name)
+      "#{column_name}=<removed for readability>"
+    end
+  end.join
+end
+```
+
+One of the first things you might notice is the `return` on the first line. That's strange, a programmer with no experience in Ruby might think - we're immediately returning without an `if` statement? What is the point in the rest of the function? Of course, this is still a conditional return, but the boolean is placed at the end of the line.
+
+This conditional is also placed after the `unless` keyword, which is identical to _if not_ but with the benefit that an engineer whose Ruby is not fluent will have to expend a non-trivial number of brain cycles adding the negation in their head. With post-fix `if` or `unless`, you first see _what_ will happen, and are left guessing _why_ this will happen until the end of the line. There is a joke about the German language and waiting for the verb, and I'm sure there is a similar pun to be made about Ruby programmers enduring a nail-biting wait for the conditional.
+
+My final gripe with the snippet above is the implicit method calls. From glancing at the code above, you may assume that `update_duplicates?` and `record_timestamps?` are variables defined somewhere. They might be, but there are a plethora of other possibilities, and the answer can only be determined by digging further through the code (or, thanks to the joys of [monkey patching](https://shopify.engineering/the-case-against-monkey-patching), by running it). Indeed, they may be class, module or instance variables, but in this case they are actually methods defined on the class itself. Where are the brackets? Here is the stroke of genius from the designers of Ruby: _you don't need brackets to call a function_. This is genius because it makes the Ruby programmer feel like they are writing cleaner code, while simultaneously making it almost incomprehensible to everyone else.
+
+It also means that you can't pass in a function to another function as you might expect to, as the function will be called when you try and pass it in. Take the following example;
+
+```ruby
+def call_with_1(func)
+  func(1)
+end
+
+def bar(x)
+  puts x
+end
+```
+
+If you wrote the above in most other languages and then called `call_with_1(bar)`, you'd expect `bar` to be called with `1`, which would simply be printed to the console. Instead, you get the following in Ruby:
+
+```bash
+(irb):16:in `bar': wrong number of arguments (given 0, expected 1) (ArgumentError)
+        from (irb):20:in `<main>'
+        from /Users/tschafer/.rbenv/versions/3.2.2/lib/ruby/gems/3.2.0/gems/irb-1.12.0/exe/irb:9:in `<top (required)>'
+        from /Users/tschafer/.rbenv/versions/3.2.2/bin/irb:25:in `load'
+        from /Users/tschafer/.rbenv/versions/3.2.2/bin/irb:25:in `<main>'
+```
+
+Of course, this can be worked around with blocks, procs or lambdas, but to me this seems like unnecessary complexity for no real gain.
+
+The idioms discussed above are easy to understand given a modicum of Ruby knowledge, but I think there is value to a language being understandable to the average programmer: it is not uncommon for a company to own a number of services written in a variety of languages, and an engineer might need to make a quick change to a service that they don't routinely interact with, and for those without prior experience Ruby can be troublesome in such circumstances.
+
+In Python, this would be written more like the following:
+
+```python
+if update_duplicates() and record_timestamps():
+  return ""
+```
+
+While there may be no such thing as objectively readable code, I think that the Python example is more clear to the average programmer making a quick change to a foreign service, or a bleary-eyed on-call engineer trying to work out why the application pods running Ruby are crashing with `undefined local variable or method 'record_timestamps' for main:Object (NameError)` at 3 in the morning.
