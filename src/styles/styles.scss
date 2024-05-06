@@ -107,10 +107,11 @@ p {
   cursor: pointer;
   position: relative;
   top: 0;
-  transition: top ease 0.1s;
+  transition: all ease 0.2s;
 
   &:hover {
     top: -4px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0 6px;
   }
 
   img {
@@ -118,6 +119,7 @@ p {
     min-width: 30%;
     height: 150px;
     object-fit: cover;
+    margin: auto 0;
   }
 
   .post-info {
@@ -153,4 +155,20 @@ blockquote {
   p {
     padding: 8px 10px;
   }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: black;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $bg-med;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $bg-light;
 }
