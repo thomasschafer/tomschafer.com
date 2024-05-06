@@ -142,6 +142,12 @@ data Frontmatter = Frontmatter
   }
   deriving (Show)
 
+updateBlogPostHtml :: Text -> Text
+updateBlogPostHtml =
+  toStrict
+  . replaceWithList [Replace "<a href" "<a target=”_blank” href"]
+  . fromStrict
+
 processBlogPost :: String -> IO (Frontmatter, Text)
 processBlogPost blogPostPath = do
   blogPostContent <- TIO.readFile blogPostPath
@@ -166,7 +172,7 @@ processBlogPost blogPostPath = do
               description
             }
     result <- writeHtml5String def content
-    return (metaData, result)
+    return (metaData, updateBlogPostHtml result)
 
 clearDestDir :: FilePath -> IO ()
 clearDestDir destDir = do
