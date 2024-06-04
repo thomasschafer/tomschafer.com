@@ -1,17 +1,16 @@
-import Codec.Picture (DynamicImage (..), convertRGB8, readImage, savePngImage)
-import Codec.Picture.Types (Image (..), PixelRGB8, generateImage, pixelAt)
-import Control.Monad (forM_, when)
+import Control.Monad (when)
 import Data.Char (toLower)
-import Data.List (isSuffixOf, sortBy)
+import Data.List (sortBy)
 import Data.Map qualified as M
 import Data.Ord (comparing)
 import Data.Text (Text, pack, unpack)
 import Data.Text.IO qualified as TIO
 import Data.Text.Lazy (fromStrict, toStrict)
 import Data.Text.Lazy qualified as Lazy
+import Image (addSmallImageVersions)
 import System.Directory (copyFile, createDirectoryIfMissing, doesDirectoryExist, doesFileExist, listDirectory, removeDirectoryRecursive)
 import System.Environment (getEnv)
-import System.FilePath (splitExtension, takeExtension, (</>))
+import System.FilePath (takeExtension, (</>))
 import Text.Pandoc
   ( Meta (Meta),
     Pandoc (Pandoc),
@@ -192,43 +191,6 @@ createPages destDir = do
 
   renderPages blogPosts pageTemplate postPreviewTemplate "src/pages" destDir
   createPostPages blogPosts postTemplate destDir
-
-scaleToHeight :: Int -> DynamicImage -> DynamicImage
-scaleToHeight targetHeight img = ImageRGB8 (scaleImage targetHeight (convertRGB8 img))
-  where
-    scaleImage targetHeight (Image width height dat) = generateImage pixelRenderer newWidth targetHeight
-      where
-        aspectRatio = fromIntegral width / fromIntegral height
-        newWidth = floor (aspectRatio * fromIntegral targetHeight)
-        pixelRenderer x y =
-          pixelAt
-            (Image width height dat)
-            (floor (fromIntegral x * fromIntegral width / fromIntegral newWidth))
-            (floor (fromIntegral y * fromIntegral height / fromIntegral targetHeight))
-
-processImage :: FilePath -> FilePath -> IO ()
-processImage inputPath outputPath = do
-  eitherImg <- readImage inputPath
-  case eitherImg of
-    Left err -> putStrLn $ "Error loading image " ++ inputPath ++ ": " ++ err
-    Right img -> do
-      let targetHeight = 250
-      let scaledImg = scaleToHeight targetHeight img
-      savePngImage outputPath scaledImg
-
-getImageFiles :: FilePath -> IO [FilePath]
-getImageFiles dir = do
-  files <- listDirectory dir
-  return [dir </> file | file <- files, any (`isSuffixOf` file) [".jpg", ".jpeg", ".png", ".bmp", ".gif"]]
-
-addSmallImageVersions :: FilePath -> IO ()
-addSmallImageVersions path = do
-  let outputSuffix = "-small"
-  imageFiles <- getImageFiles path
-  forM_ imageFiles $ \inputPath -> do
-    let (baseName, ext) = splitExtension inputPath
-    let outputPath = baseName ++ outputSuffix ++ ext
-    processImage inputPath outputPath
 
 main :: IO ()
 main = do
