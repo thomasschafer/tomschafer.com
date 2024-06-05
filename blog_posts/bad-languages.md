@@ -171,6 +171,10 @@ Adding this boilerplate isn't so bad once you learn about this particular behavi
 
 There are a number of other changes I would make to Go given the choice, such as adding union types or immutable variables (distinct from the compile-time constants that Go provides), but I won't dive in to these further to save this post from turning too far into a functional programming pitch.
 
+## Further reading
+
+For some more examples of Go footguns, I'd highly recommend [this article](https://www.dolthub.com/blog/2023-10-20-golang-pitfalls-3/) which discusses various issues with slices - it's a great read.
+
 # Ruby
 
 While the examples given for Go are largely related to the type system, Ruby is a dynamically typed language, which means that the types of variables no longer reside in the compiler and instead reside in the heads of the three developers who built the application and have since moved to your company's competitors for a substantially larger compensation package. For this reason I won't dwell on the benefits that a good type system would bring the language, and in fact there is actually a rather nice type system for Ruby called [Sorbet](https://sorbet.org/), which is optional but makes working with Ruby much more enjoyable.
