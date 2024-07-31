@@ -4,7 +4,7 @@ pubDate: 2024-05-05
 image:
   url: images/coding-in-coffee-shop.png
   alt: A young woman coding in a coffee shop
-description: Some argue that there is no objective truth - only subjective beliefs. I will ignore this entirely and discuss the shortcomings of some languages I've used.
+description: Musings on a couple of programming languages that are both productive and deeply distasteful.
 ---
 
 Bertrand Russell said

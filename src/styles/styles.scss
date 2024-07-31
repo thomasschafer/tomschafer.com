@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  color: white;
+  color: $text-color;
   font-family: monospace;
   overflow-y: scroll;
   background: $bg-med-dark;
@@ -30,7 +30,7 @@ header {
 
   a {
     font-weight: bold;
-    color: white;
+    color: $text-color;
     font-size: xxx-large;
     text-decoration: none;
   }
@@ -62,7 +62,7 @@ p {
     cursor: pointer;
 
     a {
-      color: white;
+      color: $text-color;
       margin: auto 0;
     }
   }
@@ -133,7 +133,7 @@ p {
   a {
     font-size: large;
     font-weight: bold;
-    color: white;
+    color: $text-color;
     text-decoration: none;
   }
 }
