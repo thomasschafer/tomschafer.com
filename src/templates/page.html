@@ -23,7 +23,16 @@
 
 <body>
   <header>
+    <script src="theme-toggle.js"></script>
     <a href="index.html">Tom Schafer</a>
+    <div>
+      <label for="theme-dropdown">Theme </label>
+      <select id="theme-dropdown">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="auto">Auto</option>
+      </select>
+    </div>
   </header>
 
   {% body %}

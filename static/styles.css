@@ -1,21 +1,37 @@
-@import "./code-theme.scss";
-@import "./shared-vars.scss";
+@import "./code-theme.css";
+
+:root {
+  --bg-dark: #2c2549;
+  --bg-med-dark: #4a4173;
+  --bg-med: #5E548E;
+  --bg-light: #9a91c7;
+
+  --width-small: 700px;
+
+  --background-color: var(--bg-light);
+  --text-color: #000000;
+}
+
+[data-theme="dark"] {
+  --background-color: var(--bg-med-dark);
+  --text-color: #ffffff;
+}
 
 html {
   height: 100%;
 }
 
 body {
-  color: white;
+  color: var(--text-color);
   font-family: monospace;
   overflow-y: scroll;
-  background: $bg-med-dark;
+  background: var(--background-color);
   background-attachment: fixed;
   margin: auto;
   padding: 20px 40px 50px;
   max-width: 800px;
 
-  @media screen and (max-width: $width-small) {
+  @media screen and (max-width: var(--width-small)) {
     padding-right: 20px;
     padding-left: 20px;
   }
@@ -27,13 +43,25 @@ a {
 
 header {
   padding: 30px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   a {
     font-weight: bold;
-    color: white;
+    color: var(--text-color);
     font-size: xxx-large;
     text-decoration: none;
   }
+}
+
+#theme-dropdown {
+  padding: 2px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  border-width: 1px;
+  font: unset;
 }
 
 p {
@@ -62,7 +90,7 @@ p {
     cursor: pointer;
 
     a {
-      color: white;
+      color: var(--text-color);
       margin: auto 0;
     }
   }
@@ -98,7 +126,7 @@ p {
 .post-preview {
   display: flex;
   flex-direction: row;
-  background: $bg-dark;
+  background: var(--bg-dark);
   margin: 20px 0;
   padding: 10px;
   border-radius: 4px;
@@ -133,7 +161,7 @@ p {
   a {
     font-size: large;
     font-weight: bold;
-    color: white;
+    color: var(--text-color);
     text-decoration: none;
   }
 }
@@ -148,7 +176,7 @@ p {
 }
 
 blockquote {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(var(--background-color), 0.2);
   border-radius: 5px;
 
   p {
@@ -161,13 +189,13 @@ blockquote {
     height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: $bg-med-dark;
+  background: var(--bg-med-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $bg-dark;
+  background: var(--bg-dark);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $bg-light;
+    background: var(--bg-light);
 }

@@ -1,12 +1,13 @@
-@import "./shared-vars.scss";
-
-// Define CSS Variables for Colors
-$color-alert: #d3b3ff;
-$color-annotation: #acc7ff;
-$color-error: #ff6666;
-$color-operator: #999999;
-$color-light-green: #98fb98;
-$background-dark: var(--bg-dark);
+:root {
+    --background-color: $bg-light;
+    --text-color: #000000;
+    --color-alert: #d3b3ff;
+    --color-annotation: #acc7ff;
+    --color-error: #ff6666;
+    --color-operator: #999999;
+    --color-light-green: #98fb98;
+    --background-dark: var(--bg-dark);
+}
 
 /* Base styles for code blocks */
 pre>code.sourceCode {
@@ -32,17 +33,17 @@ pre>code.sourceCode {
 }
 
 div.sourceCode {
-  background-color: $bg-dark !important;
+  background-color: var(--bg-dark) !important;
   margin: 1em 0;
   padding: 2em;
-  background-color: $background-dark;
+  background-color: var(--background-dark);
   border-radius: 4px;
 
   code {
     padding: 0;
   }
 
-  @media screen and (max-width: $width-small) {
+  @media screen and (max-width: var(--width-small) {
     padding: 1em;
   }
 
@@ -67,7 +68,7 @@ pre.sourceCode {
 }
 
 code {
-    background-color: $bg-dark;
+    background-color: var(--bg-dark);
     padding: 3px 5px;
     border-radius: 2px;
 }
@@ -117,79 +118,79 @@ pre.numberSource {
 /* Alert */
 code span.al {
   font-weight: bold;
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* Annotation */
 code span.an {
   font-weight: bold;
   font-style: italic;
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* Attribute */
 code span.at {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* BaseN */
 code span.bn {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* BuiltIn */
 code span.bu {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* ControlFlow */
 code span.cf {
-  color: $color-annotation;
+  color: var(--color-annotation);
   font-weight: bold;
 }
 
 /* Char */
 code span.ch {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* Constant */
 code span.cn {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* Comment */
 code span.co {
-  color: $color-alert;
+  color: var(--color-alert);
   font-style: italic;
 }
 
 /* CommentVar */
 code span.cv {
-  color: $color-alert;
+  color: var(--color-alert);
   font-weight: bold;
   font-style: italic;
 }
 
 /* Documentation */
 code span.do {
-  color: $color-annotation;
+  color: var(--color-annotation);
   font-style: italic;
 }
 
 /* DataType */
 code span.dt {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* DecVal */
 code span.dv {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* Error */
 code span.er {
-  color: $color-error;
+  color: var(--color-error);
   font-weight: bold;
 }
 
@@ -198,81 +199,81 @@ code span.ex {}
 
 /* Float */
 code span.fl {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* Function */
 code span.fu {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* Import */
 code span.im {
-  color: $color-alert;
+  color: var(--color-alert);
   font-weight: bold;
 }
 
 /* Information */
 code span.in {
-  color: $color-annotation;
+  color: var(--color-annotation);
   font-weight: bold;
   font-style: italic;
 }
 
 /* Keyword */
 code span.kw {
-  color: $color-alert;
+  color: var(--color-alert);
   font-weight: bold;
 }
 
 /* Operator */
 code span.op {
-  color: $color-operator;
+  color: var(--color-operator);
 }
 
 /* Other */
 code span.ot {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* Preprocessor */
 code span.pp {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* SpecialChar */
 code span.sc {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* SpecialString */
 code span.ss {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* String */
 code span.st {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* Variable */
 code span.va {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 /* VerbatimString */
 code span.vs {
-  color: $color-annotation;
+  color: var(--color-annotation);
 }
 
 /* Warning */
 code span.wa {
-  color: $color-alert;
+  color: var(--color-alert);
   font-weight: bold;
   font-style: italic;
 }
 
 /* Additional light green usage */
 code span.lg {
-  color: $color-light-green;
+  color: var(--color-light-green);
 }
