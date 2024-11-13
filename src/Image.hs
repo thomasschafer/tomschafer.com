@@ -28,7 +28,7 @@ processImage inputPath outputPath =
   readImage inputPath >>= \case
     Left err -> putStrLn $ "Error loading image " ++ inputPath ++ ": " ++ err
     Right img -> do
-      let targetHeight = 200
+      let targetHeight = 400
       let scaledImg = scaleToHeight targetHeight img
       savePngImage outputPath scaledImg
 
