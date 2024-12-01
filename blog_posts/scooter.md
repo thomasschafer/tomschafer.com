@@ -1,5 +1,5 @@
 ---
-title: Scooter - a personal project
+title: Scooter
 pubDate: 2024-11-13
 image:
   url: images/scooter-preview.png
