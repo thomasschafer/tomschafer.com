@@ -2,12 +2,8 @@
 
 set -e
 
-./build.sh
-
-export $(cat .env | grep -v "#" )
-
 echo "Deploying..."
 
-netlify deploy --site $NETLIFY_SITE_NAME --dir ./out --prod
+nix-shell --pure --run "make deploy"
 
 echo "Deployment complete"

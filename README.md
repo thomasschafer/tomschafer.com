@@ -10,9 +10,12 @@ Pre-requisites:
 1. Install `sass`, used for transpiling `.scss` files to `.css` (see [here](https://sass-lang.com/install/))
 1. Make a copy of `.env.template` called `.env`, and add values to the `Build` section
 
-To build:
+To build, run:
 
-1. Run `./build.sh`
+```
+nix-shell
+make build
+```
 
 ## Deploy
 
