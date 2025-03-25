@@ -7,20 +7,24 @@ image:
 description: Scooter v0.4 is out, including new fields for glob matching files, editor integration and performance improvements
 ---
 
-# What's new?
+TODO: intro
+
+# Here's what' new in v0.4:
 
 ## Include and exclude files with glob matching
 
 TODO: text
 TODO: video
 
-## Open editor from search results list with o by @thomasschafer in #80
-## Add config option to override editor command by @thomasschafer in #84
+## Open editor from search results list
 
-TODO: text
+TODO: text:
+- feature (open editor with o)
+- config override
+  - tmux integration
 TODO: video
 
-## Improve scrolling by @thomasschafer in #85
+## Improved scrolling
 
 Previously the selected item was locked to the centre of the screen which didn't look quite right. Scrolling looks a lot more natural now!
 
