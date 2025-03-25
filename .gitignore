@@ -4,3 +4,4 @@ out/
 drafts/
 .stack-work
 .env
+.sass-cache/

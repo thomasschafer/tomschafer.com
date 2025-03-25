@@ -1,17 +1,16 @@
-.PHONY: build sass all deploy clean
+.PHONY: build sass deploy clean
 
-all: build sass
+OUT_DIR := ./out
+STYLES_SRC := ./src/styles/styles.scss
+STYLES_DEST := $(OUT_DIR)/styles.css
 
 build:
-	stack build
 	stack run
+	sass --sourcemap=none --style=compressed $(STYLES_SRC) $(STYLES_DEST)
 
-sass:
-	sass --no-source-map --style=compressed ./src/styles/styles.scss ./out/styles.css
-
-deploy: all
-	netlify deploy --site $(NETLIFY_SITE_NAME) --dir ./out --prod
+deploy: build
+	netlify deploy --site $(NETLIFY_SITE_NAME) --dir $(OUT_DIR) --prod
 
 clean:
 	stack clean
-	rm -f ./out/styles.css
+	rm -f $(STYLES_DEST)
