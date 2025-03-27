@@ -19,9 +19,20 @@ jobs:
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
+      - name: Cache Stack dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.stack
+            .stack-work
+          key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml', 'package.yaml', '**/*.cabal') }}
+          restore-keys: |
+            ${{ runner.os }}-stack-
+
       - name: Build and deploy
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_NAME: ${{ secrets.NETLIFY_SITE_NAME }}
+          SITE_URL: ${{ secrets.SITE_URL }}
         run: |
           nix develop --command make deploy
