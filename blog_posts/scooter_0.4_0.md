@@ -7,34 +7,55 @@ image:
 description: Scooter v0.4 is out, including new fields for glob matching files, editor integration and performance improvements
 ---
 
-TODO: intro
-
-# Here's what' new in v0.4:
+[Scooter](https://github.com/thomasschafer/scooter) is a fast, user-friendly find and replace tool built for people who love the terminal. We've recently released v0.4: here is a rundown of what's new.
 
 ## Include and exclude files with glob matching
 
-TODO: text
-TODO: video
+You can now use glob patterns to both include and exclude files, in a similar way to the find and replace in VSCode. For instance, if you wanted to include all matches with the `.rs` extension except for those in the `xtask` directory, you could do this:
+
+![Scooter with file includes and excludes](images/scooter-include-exclude.png)
 
 ## Open editor from search results list
 
-TODO: text:
-- feature (open editor with o)
-- config override
-  - tmux integration
-TODO: video
+From the search results page you can now open your editor with `o`:
 
-## Improved scrolling
+![Scooter scrolling preview](gifs/scooter-editor-open.gif)
 
-Previously the selected item was locked to the centre of the screen which didn't look quite right. Scrolling looks a lot more natural now!
+By default this will use your `$EDITOR` environment variable, but you can [override this using your config file](https://github.com/thomasschafer/scooter?tab=readme-ov-file#editor_open-section).
 
-![Scooter preview](gifs/scooter-0-4-scroll.gif)
+You can combine this with some editor configuration to get a nice integration - for instance, I use Helix and Tmux, and I have the following in my Helix configuration to open Scooter in a floating window:
+
+```toml
+[keys.select.ret]
+s = ":sh tmux popup -xC -yC -w90% -h90% -E scooter"
+```
+
+I also have this in my Scooter config:
+
+```toml
+[editor_open]
+command = 'tmux send-keys -t "$TMUX_PANE" ":open %file:%line" Enter'
+exit = true
+```
+
+This allows me to open Scooter in a floating pane in my editor with `<enter> s`, and then open a search result back in the editor (closing the floating window) with `o`:
+
+![Scooter Helix integration](gifs/scooter-helix-integration.gif)
 
 ## 3x faster replacements
 
-Replacements now happen in parallel, resulting in >3x faster replacements which is especially nice in big repos. I'm sure there is a lot more room to improve things here, so watch this space, and if you have ideas I'd love contributions - while it's already pretty quick, I want to make Scooter the fastest way to find and replace (without sacrificing usability or safety),and we're only just getting started.
+Replacements now happen in parallel, resulting in >3x faster replacements which is especially nice in big repos. I'm sure there is a lot more room to improve things here, so watch this space, and if you have ideas I'd love contributions.
 
+## Improved scrolling
 
-# Contributions are welcome!
+Previously the selected item was locked to the centre of the screen, which didn't look quite right. Scrolling looks a lot more natural now!
 
-Whether you are an expert in building TUIs with Rust or have never used the language before, I'm really grateful for any contributions to Scooter, whether that's creating issues for bugs,requesting new features or creating PRs to implement new ideas and improve performance. If you want a new feature then just create an issue first so that we can chat about it! I'm also always so grateful for anyone adding Scooter to package managers.
+![Scooter scrolling preview](gifs/scooter-0-4-scroll.gif)
+
+# Installation
+
+Check out the installation guide [here](https://github.com/thomasschafer/scooter?tab=readme-ov-file#installation) to get started with Scooter - I'd love to know what you think.
+
+## Contributions are welcome!
+
+No matter your experience level I'm always really grateful for any contributions to Scooter, whether that's creating issues for bugs, requesting features or creating PRs to implement new ideas and improve performance. If you want a new feature then just create an issue first so that we can chat about it! I'm also always grateful for anyone adding Scooter to package managers.
