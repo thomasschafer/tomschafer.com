@@ -4,8 +4,12 @@ OUT_DIR := ./out
 STYLES_SRC := ./src/styles/styles.scss
 STYLES_DEST := $(OUT_DIR)/styles.css
 
-build:
+build: haskell css
+
+haskell:
 	stack run
+
+css:
 	sass --sourcemap=none --style=compressed $(STYLES_SRC) $(STYLES_DEST)
 
 deploy: build

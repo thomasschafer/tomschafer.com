@@ -68,6 +68,15 @@ p {
   margin: 50px 0;
 }
 
+.expand-on-hover {
+    transform: scale(1);
+    transition: all ease 0.1s;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+}
+
 .links {
   p {
     display: flex;
@@ -80,6 +89,8 @@ p {
   }
 
   li {
+    @extend .expand-on-hover;
+
     display: flex;
     margin: 12px 0;
     cursor: pointer;
