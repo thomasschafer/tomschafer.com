@@ -17,7 +17,7 @@ You can now use glob patterns to both include and exclude files, in a similar wa
 
 ## Open editor from search results list
 
-From the search results page you can now open your editor with `o`:
+From the search results page you can now open your editor at the selected file and line with `o`:
 
 ![Scooter scrolling preview](gifs/scooter-editor-open.gif)
 
@@ -44,7 +44,7 @@ This allows me to open Scooter in a floating pane in my editor with `<enter> s`,
 
 ## 3x faster replacements
 
-Replacements now happen in parallel, resulting in >3x faster replacements which is especially nice in big repos. I'm sure there is a lot more room to improve things here, so watch this space, and if you have ideas I'd love contributions.
+Replacements now happen in parallel, resulting in over 3x faster replacements which is especially nice in big repos. I'm sure there is a lot more room to improve things here, so watch this space, and if you have ideas I'd love contributions.
 
 ## Improved scrolling
 
