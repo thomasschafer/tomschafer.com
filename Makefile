@@ -1,12 +1,12 @@
-.PHONY: build sass deploy clean
+.PHONY: build html css deploy clean
 
 OUT_DIR := ./out
 STYLES_SRC := ./src/styles/styles.scss
 STYLES_DEST := $(OUT_DIR)/styles.css
 
-build: haskell css
+build: html css
 
-haskell:
+html:
 	stack run
 
 css:
